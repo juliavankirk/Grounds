@@ -61,12 +61,20 @@ Open the `server` and `client` in separate VSCode workspaces or open the combine
 
 ### Purpose
 
-2-5 sentences describing what the system does
+Grounds is an e-commerce website that allows people to buy and sell products over the internet, rather than at brick-and-mortar locations. In today's post-COVID19 era, more and more customers are accustomed to making purchases from the tips of their fingers in the comfort of their own home, and Grounds is the perfect online platform for these prospective customers to shop for all their coffee needs. Through this web app, business administrators can also easily update their item catalog, process customer orders, accept payments, and gather necessary data from customers to streamline the logistics of fulfilling orders.
 
 ### Pages
 
-* Home: 1-3 sentences describing what the page displays and what a user can do
-* Shopping cart: ...
+* Home Page: a landing page that will feature a hero section that will “quick-add” a kit of items to cart. Beneath the hero section will also be section of featured products, and beneath that will be a section for marketing blurb.
+* About Page: an about page that describes to the reader the enterprise’s operations. The about page will go in depth regarding the company’s mission and values, which would serve as a marketing tool to entice potential customers to support the business. Implemented properly, this page could boost publicity coupled with SEO.
+* Authentication Page: a sign-up/ login page to properly authenticate a user. Customers will have to be logged-in to place an order, and admins must have the necessary permissions to manage and update items in the product catalog. Creation of admin accounts will be out of the scope of this project under the assumption it is done by company management, and instead we will be using predefined admin accounts. Customer accounts, on the other hand, will be made and updated as necessary.
+* Catalog Page: a page containing all the products in the shop’s inventory.
+* Item Page/ Modal: a page/ modal that goes into detail about the item, with images and a description available. The price will be listed along with its name. A customer is able to add items to cart with this page, but an admin is able to update item information with this page.
+* Cart Page: a page that lists items that the customer has added to their cart, the quantity of each item in the cart, as well as the sum total of all items.
+* Checkout Page: a page that renders an order summary to screen, along with a form that will take in all necessary input to complete the order.
+* Order Confirmation Page: upon successful order placement, an order summary page will be shown to the customer that renders all relevant order details to screen along with a confirmation message for that order.
+* Orders Page: a page that lists all orders made, with every relevant information included. This page will be accessed exclusively by administrators.
+* Order History Page: a page that lists the order history of the customer, together with relevant details of the order.
 
 ### Entity-Relationship (ER) Diagram
 
