@@ -15,7 +15,21 @@
 						"exec": [
 							"pm.test(\"Create user test\", function(){\r",
 							"pm.response.to.have.status(201)\r",
-							"})"
+							"})\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.test(\"Validation JSON data test\", function(){\r",
+							"pm.expect(jsonData.forename).to.eql('Ilon');\r",
+							"pm.expect(jsonData.surename).to.eql('Musk');\r",
+							"pm.expect(jsonData.id).to.eql(9912191111);\r",
+							"pm.expect(jsonData.role).to.eql('coder');\r",
+							"pm.expect(jsonData.email).to.eql('coder@gmail.com');\r",
+							"pm.expect(jsonData.password).to.eql('ldhei25+4-3fge');\r",
+							"});\r",
+							"\r",
+							"pm.globals.set(\"user_id\", jsonData._id);\r",
+							"\r",
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -48,18 +62,29 @@
 		},
 		{
 			"name": "Delete user by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:3000/users/631b1dfa5602b414bcb900dd",
+					"raw": "localhost:3000/users/{{user_id}}",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
 						"users",
-						"631b1dfa5602b414bcb900dd"
+						"{{user_id}}"
 					]
 				}
 			},
