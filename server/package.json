@@ -8,7 +8,7 @@
   "description": "Template for ExpressJS API with Mongoose for Web and Mobile Engineering (DIT341)",
   "main": "./app.js",
   "scripts": {
-    "start": "nodemon ./app.js",
+    "start": "node ./app.js",
     "dev": "nodemon ./app.js",
     "lint": "eslint .",
     "test": "cross-env-shell MONGODB_URI=mongodb://localhost:27017/serverTestDB \"npm run newman-server\"",
