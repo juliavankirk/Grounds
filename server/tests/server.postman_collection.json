@@ -48,11 +48,11 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3000/users",
+					"raw": "localhost:3001/users",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "3001",
 					"path": [
 						"users"
 					]
@@ -77,11 +77,11 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:3000/users/{{user_id}}",
+					"raw": "localhost:3001/users/{{user_id}}",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "3001",
 					"path": [
 						"users",
 						"{{user_id}}"
@@ -92,6 +92,29 @@
 		},
 		{
 			"name": "Create new product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Create product test\", function(){\r",
+							"pm.response.to.have.status(201)\r",
+							"})\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.test(\"Validation JSON data test\", function(){\r",
+							"pm.expect(jsonData.product_id).to.eql(15149512);\r",
+							"pm.expect(jsonData.name).to.eql('productname here');\r",
+							"pm.expect(jsonData.quantity).to.eql(29);\r",
+							"pm.expect(jsonData.description).to.eql('description here');\r",
+							"});\r",
+							"\r",
+							"pm.globals.set(\"product_id\", jsonData._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -105,11 +128,11 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3000/products",
+					"raw": "localhost:3001/products",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "3001",
 					"path": [
 						"products"
 					]
@@ -123,11 +146,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:3000/products",
+					"raw": "localhost:3001/products",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "3001",
 					"path": [
 						"products"
 					]
@@ -141,14 +164,14 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:3000/products/631b120726e34419a4837096",
+					"raw": "localhost:3001/products/{{product_id}}",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "3001",
 					"path": [
 						"products",
-						"631b120726e34419a4837096"
+						"{{product_id}}"
 					]
 				}
 			},
@@ -169,11 +192,11 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3000/orders",
+					"raw": "localhost:3001/orders",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "3001",
 					"path": [
 						"orders"
 					]
@@ -187,11 +210,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:3000/orders",
+					"raw": "localhost:3001/orders",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "3001",
 					"path": [
 						"orders"
 					]
