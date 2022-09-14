@@ -6,8 +6,23 @@
   "scripts": {
     "postinstall": "npm install --prefix server && npm install --prefix client && npm install --only=dev --prefix client && npm run build --prefix client"
   },
-  "engines" : {
-    "npm" : "6.x",
+  "engines": {
+    "npm": "6.x",
     "node": "14.x"
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.chalmers.se:courses/dit342/2022/group-27-web.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "express": "^4.18.1",
+    "mongoose": "^6.5.4"
   }
 }
