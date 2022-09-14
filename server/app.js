@@ -12,7 +12,7 @@ var Schema = mongoose.Schema;
 // Variables
 var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/groundsDB';
 //'mongodb+srv://sergeyb:Pfgflyfz69@cluster0.i1nkq8s.mongodb.net/mydb?retryWrites=true&w=majority';
-var port = process.env.PORT || 3001;
+var port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 

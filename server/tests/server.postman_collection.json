@@ -48,11 +48,11 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/users",
+					"raw": "localhost:3000/users",
 					"host": [
 						"localhost"
 					],
-					"port": "3001",
+					"port": "3000",
 					"path": [
 						"users"
 					]
@@ -77,11 +77,11 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:3001/users/{{user_id}}",
+					"raw": "localhost:3000/users/{{user_id}}",
 					"host": [
 						"localhost"
 					],
-					"port": "3001",
+					"port": "3000",
 					"path": [
 						"users",
 						"{{user_id}}"
@@ -128,11 +128,11 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/products",
+					"raw": "localhost:3000/products",
 					"host": [
 						"localhost"
 					],
-					"port": "3001",
+					"port": "3000",
 					"path": [
 						"products"
 					]
@@ -146,11 +146,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:3001/products",
+					"raw": "localhost:3000/products",
 					"host": [
 						"localhost"
 					],
-					"port": "3001",
+					"port": "3000",
 					"path": [
 						"products"
 					]
@@ -164,11 +164,11 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:3001/products/{{product_id}}",
+					"raw": "localhost:3000/products/{{product_id}}",
 					"host": [
 						"localhost"
 					],
-					"port": "3001",
+					"port": "3000",
 					"path": [
 						"products",
 						"{{product_id}}"
@@ -192,11 +192,11 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/orders",
+					"raw": "localhost:3000/orders",
 					"host": [
 						"localhost"
 					],
-					"port": "3001",
+					"port": "3000",
 					"path": [
 						"orders"
 					]
@@ -210,11 +210,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:3001/orders",
+					"raw": "localhost:3000/orders",
 					"host": [
 						"localhost"
 					],
-					"port": "3001",
+					"port": "3000",
 					"path": [
 						"orders"
 					]
