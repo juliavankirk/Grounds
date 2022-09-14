@@ -11,7 +11,6 @@ var Schema = mongoose.Schema;
 
 // Variables
 var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/groundsDB';
-//'mongodb+srv://sergeyb:Pfgflyfz69@cluster0.i1nkq8s.mongodb.net/mydb?retryWrites=true&w=majority';
 var port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
@@ -81,7 +80,7 @@ app.get('/api', function (req, res) {
 });
 
 // POST - Create a new user
-app.post('/users', function (req, res, next) {
+app.post('/api/users', function (req, res, next) {
     var user = new User(req.body);
     user.save(function (err) {
         if (err) { return next(err); }
@@ -90,7 +89,7 @@ app.post('/users', function (req, res, next) {
 });
 
 // DELETE - Delete the user by given id
-app.delete('/users/:id', function (req, res, next) {
+app.delete('/api/users/:id', function (req, res, next) {
     var id = req.params.id;
     User.findOneAndDelete({ _id: id }, function (err, user) {
         if (err) { return next(err); }
@@ -103,7 +102,7 @@ app.delete('/users/:id', function (req, res, next) {
 });
 
 //POST - Create a new product
-app.post('/products', function (req, res, next) {
+app.post('/api/products', function (req, res, next) {
     var product = new Product(req.body);
     product.save(function (err) {
         if (err) { return next(err); }
@@ -112,7 +111,7 @@ app.post('/products', function (req, res, next) {
 });
 
 //GET - Read the list of products
-app.get('/products', function (req, res, next) {
+app.get('/api/products', function (req, res, next) {
     Product.find(function (err, products) {
         if (err) { return next(err); }
         res.status(201).json(products);
@@ -120,7 +119,7 @@ app.get('/products', function (req, res, next) {
 });
 
 // DELETE - Delete the product by given id
-app.delete('/products/:id', function (req, res, next) {
+app.delete('/api/products/:id', function (req, res, next) {
     var id = req.params.id;
     Product.findOneAndDelete({ _id: id }, function (err, product) {
         if (err) { return next(err); }
@@ -133,7 +132,7 @@ app.delete('/products/:id', function (req, res, next) {
 });
 
 //POST - Create a new order
-app.post('/orders', function (req, res, next) {
+app.post('/api/orders', function (req, res, next) {
     var order = new Order(req.body);
     order.save(function (err) {
         if (err) { return next(err); }
@@ -142,7 +141,7 @@ app.post('/orders', function (req, res, next) {
 });
 
 //GET - Read the list of orders
-app.get('/orders', function (req, res, next) {
+app.get('/api/orders', function (req, res, next) {
     Order.find(function (err, orders) {
         if (err) { return next(err); }
         res.status(201).json(orders);
@@ -150,7 +149,7 @@ app.get('/orders', function (req, res, next) {
 });
 
 //DELETE - Delete the list of orders
-app.delete('/orders', function(req, res, next){
+app.delete('/api/orders', function(req, res, next){
     
 })
 
