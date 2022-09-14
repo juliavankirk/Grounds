@@ -48,11 +48,11 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3000/api/users",
+					"raw": "localhost:3001/api/users",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "3001",
 					"path": [
 						"api",
 						"users"
@@ -78,11 +78,11 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:3000/api/users/{{user_id}}",
+					"raw": "localhost:3001/api/users/{{user_id}}",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "3001",
 					"path": [
 						"api",
 						"users",
@@ -130,11 +130,11 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3000/api/products",
+					"raw": "localhost:3001/api/products",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "3001",
 					"path": [
 						"api",
 						"products"
@@ -149,11 +149,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:3000/api/products",
+					"raw": "localhost:3001/api/products",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "3001",
 					"path": [
 						"api",
 						"products"
@@ -168,11 +168,11 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:3000/api/products/{{product_id}}",
+					"raw": "localhost:3001/api/products/{{product_id}}",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "3001",
 					"path": [
 						"api",
 						"products",
@@ -197,11 +197,11 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3000/api/orders",
+					"raw": "localhost:3001/api/orders",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "3001",
 					"path": [
 						"api",
 						"orders"
@@ -216,11 +216,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:3000/api/orders",
+					"raw": "localhost:3001/api/orders",
 					"host": [
 						"localhost"
 					],
-					"port": "3000",
+					"port": "3001",
 					"path": [
 						"api",
 						"orders"
