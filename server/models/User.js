@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 const userSchema = new Schema({
     forename: {
         type: String,
-        required: true
+        required: [true, "Please include your first name."]
      },
     surname: {
         type: String,

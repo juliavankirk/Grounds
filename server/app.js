@@ -16,7 +16,8 @@ var port = process.env.PORT || 3001;
 app.use(bodyParser.json());
 
 // Connect to MongoDB
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true }, function (err) {
+mongoose.connect(mongoURI, 
+    { useNewUrlParser: true, useUnifiedTopology: true }, function (err) {
     if (err) {
         console.error(`Failed to connect to MongoDB with URI: ${mongoURI}`);
         console.error(err.stack);
@@ -72,12 +73,21 @@ app.use(express.json());
 app.use(morgan('dev'));
 // Enable cross-origin resource sharing for frontend must be registered before api
 app.options('*', cors());
+//registering cors
 app.use(cors());
 
 // Import routes
-app.get('/api', function (req, res) {
-    res.json({ 'message': 'Welcome to your DIT342 backend ExpressJS project!' });
-});
+app.use("api/users", usersRoutes);
+app.use("api/products", productsRoutes);
+app.use("api/carts", cartsRoutes);
+app.use("api/orders", ordersRoutes);
+
+app.get("/", (req, res) {
+    res.json({
+        message:
+        "Howdy MEVN dev!"
+    })
+})
 
 // POST - Create a new user
 app.post('/api/users', function (req, res, next) {
