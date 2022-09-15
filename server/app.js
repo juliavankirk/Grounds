@@ -8,9 +8,8 @@ const bodyParser = require('body-parser');
 
 //Routes
 const userRoute = require("./controllers/userController");
-const productRoute = mongoose.model('product', productSchema);
-const cartRoute = mongoose.model('cart', cartSchema);
-const orderRoute = mongoose.model('order', orderSchema);
+const productRoute = require('product', productSchema);
+const orderRoute = require('order', orderSchema);
 
 var app = express();
 var Schema = mongoose.Schema;
@@ -84,18 +83,18 @@ app.options('*', cors());
 //registering cors
 app.use(cors());
 
-// Import routes
-app.use("api/user", userRoute);
-app.use("api/product", productRoute);
-app.use("api/cart", cartRoute);
-app.use("api/order", orderRoute);
-
 app.get("/", (req, res) => {
     res.json({
         message:
         "Howdy MEVN dev!"
     })
 })
+
+// Import routes
+app.use("api/user", userRoute);
+app.use("api/product", productRoute);
+app.use("api/order", orderRoute);
+
 
 // POST - Create a new user
 app.post('/api/user', function (req, res, next) {
@@ -118,6 +117,8 @@ app.delete('/api/user/:id', function (req, res, next) {
         res.json(user);
     });
 });
+// Custom Error Handler Middleware
+app.use(notFound, errorHandler)
 
 //POST - Create a new product
 app.post('/api/product', function (req, res, next) {
@@ -128,48 +129,6 @@ app.post('/api/product', function (req, res, next) {
     });
 });
 
-//GET - Read the list of products
-app.get('/api/product', function (req, res, next) {
-    Product.find(function (err, products) {
-        if (err) { return next(err); }
-        res.status(201).json(products);
-    });
-});
-
-// DELETE - Delete the product by given id
-app.delete('/api/product/:id', function (req, res, next) {
-    var id = req.params.id;
-    Product.findOneAndDelete({ _id: id }, function (err, product) {
-        if (err) { return next(err); }
-        if (product == null) {
-            return res.status(404).json(
-                { "message": "Product not found" });
-        }
-        res.json(product);
-    });
-});
-
-//POST - Create a new order
-app.post('/api/order', function (req, res, next) {
-    var order = new Order(req.body);
-    order.save(function (err) {
-        if (err) { return next(err); }
-        res.status(201).json(order);
-    });
-});
-
-//GET - Read the list of orders
-app.get('/api/order', function (req, res, next) {
-    Order.find(function (err, orders) {
-        if (err) { return next(err); }
-        res.status(201).json(orders);
-    });
-});
-
-//DELETE - Delete the list of orders
-app.delete('/api/order', function(req, res, next){
-    
-})
 
 // Catch all non-error handler for api (i.e., 404 Not Found)
 app.use('/api/*', function (req, res) {
