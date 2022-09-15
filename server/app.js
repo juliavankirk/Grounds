@@ -6,6 +6,12 @@ var cors = require('cors');
 var history = require('connect-history-api-fallback');
 const bodyParser = require('body-parser');
 
+//Routes
+const userRoute = require("./controllers/userController");
+const productRoute = mongoose.model('product', productSchema);
+const cartRoute = mongoose.model('cart', cartSchema);
+const orderRoute = mongoose.model('order', orderSchema);
+
 var app = express();
 var Schema = mongoose.Schema;
 
@@ -26,8 +32,8 @@ mongoose.connect(mongoURI,
     console.log(`Connected to MongoDB with URI: ${mongoURI}`);
 });
 
-// Mongoose schema
-var userSchema = new Schema({
+/**
+ * var userSchema = new Schema({
     forename: { type: String },
     surename: { type: String },
     id: { type: Number },
@@ -58,11 +64,13 @@ var orderSchema = new Schema({
     contact: { type: String }
 });
 
+ * 
+ */
+
+// Mongoose schema
+
 //Mongoose model
-var User = mongoose.model('users', userSchema);
-var Product = mongoose.model('products', productSchema);
-var Cart = mongoose.model('carts', cartSchema);
-var Order = mongoose.model('orders', orderSchema);
+
 
 // Create Express app
 var app = express();
@@ -77,10 +85,10 @@ app.options('*', cors());
 app.use(cors());
 
 // Import routes
-app.use("api/user", usersRoutes);
-app.use("api/product", productsRoutes);
-app.use("api/cart", cartsRoutes);
-app.use("api/order", ordersRoutes);
+app.use("api/user", userRoute);
+app.use("api/product", productRoute);
+app.use("api/cart", cartRoute);
+app.use("api/order", orderRoute);
 
 app.get("/", (req, res) => {
     res.json({

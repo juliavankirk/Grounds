@@ -4,7 +4,8 @@ const { Schema } = mongoose;
 const orderSchema = new Schema({
     customer: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        ref: "User",
+        required: [true, "A user is required to make an order"]
      },
     cart: {
         type: mongoose.Schema.Types.ObjectId,
