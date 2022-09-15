@@ -1,254 +1,137 @@
-const router = require("express").Router();
-const { authenticateRequest } = require("./authController");
-const { getUserFromToken } = require("./authController");
-const userModel = require("../models/User");
-const blockedTimeModel = require("../models/blocked_times");
-const lodash = require("lodash");
-const bcrypt = require("bcrypt");
+import asyncHandler from '../middleware/asyncHandler.js'
+import User from '../models/UserModel.js'
 
-router.post("/", async (req, res) => {
-  var publicFields = ["_id", "username", "email", "name"];
-  try {
-    const newUser = new userModel({
-      username: req.body.username,
-      email: req.body.email,
-      password: req.body.password,
-      name: req.body.name,
-      profilePicUrl: req.body.profilePicUrl,
-    });
-    newUser.save().then(
-      (doc) => res.status(200).json(lodash.pick(doc, publicFields)),
+/** 
+ * @desc    Authenticate use & get token
+ * @route   POST /api/users/login
+ * @access  Public
+ */
+export const authUser = asyncHandler(async (req, res) => {
+    const { email, password } = req.body
 
-      (err) => {
-        const errorMessage =
-          err.code === 11000 ? `${Object.keys(err.keyValue)}_in_use` : err;
-        res.status(400).json({ errorMessage });
-      }
-    );
-    // Investigate authorizing user after signup.
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+    const user = await User.findOne({ email }).select('+password')
 
-// TBD
-router.get("/", (req, res) => {
-  userModel.find(function (err, users) {
-    if (err) {
-      return next(err);
+    if(user && await user.matchPassword(password)) {
+        res.status(200).json({
+            data: user.toObject()
+        })
+    } else {
+        res.status(422)
+        throw new Error(`These credentials do not match our records.`)
     }
-    res.status(200).json({ data: users });
-  });
-});
+})
 
-// TBD
-router.delete("/", authenticateRequest, (req, res) => {
-  if (!req.token) {
-    res.status(401);
-  }
+/** 
+ * @desc    Register a new user
+ * @route   POST /api/users
+ * @access  Public
+ */
+export const registerUser = asyncHandler(async (req, res) => {
+    const { name, email, password } = req.body
 
-  getUserFromToken(req.token).then((user) => {
-    if (!user && user.username !== "admin") {
-      res.status(403);
-    }
-    try {
-      userModel.remove(function (err, x) {
-        if (err) {
-          return next(err);
-        }
-        res.status(200).json({ removedRecords: x.deletedCount });
-      });
-    } catch (err) {
-      res.status(500).json(err);
-    }
-  });
-});
+    const user = await User.create({ name, email, password })
+    
+    res.status(201).json({
+        data: user.toObject()
+    })
+})
 
-// TBD
-router.put("/:id", async (req, res) => {
-  let update = req.body.user;
+/** 
+ * @desc    Get logged in user
+ * @route   GET /api/users/profile
+ * @access  Private
+ */
+export const getUserProfile = asyncHandler(async (req, res) => {
+    res.status(200).json({
+        data: req.user
+    })
+})
 
-  const salt = bcrypt.genSaltSync(10);
-  const hash = bcrypt.hashSync(update.password, salt);
+/** 
+ * @desc    Update logged in user data
+ * @route   PUT /api/users/profile
+ * @access  Private
+ */
+export const updateUserProfile = asyncHandler(async (req, res) => {
+    const { name, email, password } = req.body
+    
+    req.user.name = name || req.user.name
+    req.user.email = email || req.user.email
+    if (password) req.user.password = password
 
-  update = {
-    ...update,
-    password: hash,
-  };
-  try {
-    let updatedUser = await userModel.findOneAndReplace(
-      { _id: req.params.id },
-      update,
-      {
-        new: true,
-      }
-    );
-    res.status(200).json(updatedUser);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+    await req.user.save()
+    
+    res.status(200).json({
+        data: req.user.toObject()
+    })
+})
 
-router.get("/:id", authenticateRequest, (req, res) => {
-  if (!req.token) {
-    res.status(401);
-  }
+/** 
+ * @desc    Get all users
+ * @route   GET /api/users
+ * @access  Private/Admin
+ */
+export const getAllUsers = asyncHandler(async (_, res) => {
+    const users = await User.find({})
+    
+    res.status(200).json({ data: users })
+})
 
-  getUserFromToken(req.token).then((user) => {
+/**
+ * @desc    Get user by id
+ * @route   GET /api/users/:id
+ * @access  Private/Admin
+ */
+export const getUserById = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id)
+
     if (!user) {
-      res.status(403);
+        res.status(404)
+        throw new Error(`User not found with the id of ${req.params.id}`)
     }
-    res.status(200).json({ data: user });
-  });
-});
 
-router.patch("/:id", authenticateRequest, async (req, res) => {
-  if (!req.token) {
-    res.status(401);
-  }
+    res.status(200).json({ data: user })
+})
 
-  getUserFromToken(req.token).then(async (user) => {
+
+/**
+ * @desc    Update user data by id
+ * @route   PUT /api/users/:id
+ * @access  Private/Admin
+ */
+export const updateUser = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id)
+
     if (!user) {
-      res.status(403);
+        res.status(404)
+        throw new Error(`User not found with the id of ${req.params.id}`)
     }
-    try {
-      var update = {};
-      if (req.body.name) {
-        update = { ...update, name: req.body.name };
-      }
-      if (req.body.password) {
-        update = { ...update, password: req.body.password };
-      }
-      if (req.body.profilePicUrl) {
-        update = { ...update, profilePicUrl: req.body.profilePicUrl };
-      }
 
-      let updatedUser = await userModel.findOneAndUpdate(
-        { _id: user.id },
-        update,
-        {
-          new: true,
-          useFindAndModify: false,
-        }
-      );
-      res.status(200).json(updatedUser);
-    } catch (err) {
-      res.status(500).json(err);
-    }
-  });
-});
+    const { name, email, isAdmin } = req.body
 
-router.delete("/:id", authenticateRequest, (req, res) => {
-  if (!req.token) {
-    res.status(401);
-  }
+    user.name = name || user.name
+    user.email = email || user.email
+    user.isAdmin = isAdmin
 
-  getUserFromToken(req.token).then((user) => {
+    await user.save()
+    
+    res.status(200).json({ data: user })
+})
+
+/** 
+ * @desc    Delete user by id
+ * @route   DELETE /api/users/:id
+ * @access  Private/Admin
+ */
+export const deleteUser = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id)
+
     if (!user) {
-      res.status(403);
-    }
-    user.remove().then((response) => {
-      res.status(200).json(response);
-    });
-  });
-});
-
-router.get("/:id/blockedTimes", authenticateRequest, (req, res) => {
-  if (!req.token) {
-    res.status(401);
-  }
-
-  getUserFromToken(req.token).then((user) => {
-    if (!user) {
-      res.status(403);
-    }
-    blockedTimeModel.find({ user: user._id }, function (err, meetings) {
-      if (err) {
-        return next(error);
-      } else {
-        res.status(200).json(meetings);
-      }
-    });
-  });
-});
-
-router.post("/:id/blockedTimes", authenticateRequest, (req, res) => {
-  if (!req.token) {
-    res.status(401);
-  }
-
-  getUserFromToken(req.token).then(async (user) => {
-    if (!user) {
-      res.status(403);
-    }
-    try {
-      if (typeof req.body.blockedTime === "string") {
-        const newBlockedTime = new blockedTimeModel({
-          blockedTime: req.body.blockedTime,
-          user: user._id,
-        });
-        newBlockedTime.save().then(
-          (doc) => res.status(200).json(doc),
-          (err) => res.status(400).json(err)
-        );
-      } else {
-        var timeArray = [];
-        req.body.blockedTime.map((time) => {
-          timeArray.push({
-            blockedTime: time,
-            user: user._id,
-          });
-        });
-
-        blockedTimeModel.insertMany(timeArray, (err, docs) => {
-          if (err) {
-            res.status(500).json(err);
-          }
-          res.status(200).json(docs);
-        });
-      }
-    } catch (err) {
-      res.status(500).json(err);
-    }
-  });
-});
-
-router.delete("/:userid/blockedTimes/:id", authenticateRequest, (req, res) => {
-  if (!req.token) {
-    res.status(401);
-  }
-
-  getUserFromToken(req.token).then(async (user) => {
-    if (!user) {
-      res.status(403);
+        res.status(404)
+        throw new Error(`User not found with the id of ${req.params.id}`)
     }
 
-    const deletedTime = await blockedTimeModel.findByIdAndDelete(req.params.id);
-    if (deletedTime === null) {
-      return res.status(404).json({ message: "Blocked time not found" });
-    }
-    res.status(200).json(deletedTime);
-  });
-});
-
-// TODO() Only used for passing requirements
-// Remove once project has been graded.
-router.get("/:userid/blockedTimes/:id", authenticateRequest, (req, res) => {
-  if (!req.token) {
-    res.status(401);
-  }
-
-  getUserFromToken(req.token).then(async (user) => {
-    if (!user) {
-      res.status(403);
-    }
-
-    const blockedTime = await blockedTimeModel.findById(req.params.id);
-    if (blockedTime === null) {
-      return res.status(404).json({ message: "Blocked time not found" });
-    }
-    res.status(200).json(blockedTime);
-  });
-});
-
-module.exports = router;
+    await user.remove()
+    
+    res.status(204).send()
+})

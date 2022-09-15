@@ -1,26 +1,18 @@
 import { Router } from 'express'
-import { authUser, registerUser, getUserProfile, updateUserProfile, getAllUsers, getUserById, updateUser, deleteUser } from '../controllers/UserController.js'
-import OrderRoutes from './OrderRoutes.js'
+import { createOrder, getMyOrders, getAllOrders, getOrderById, updateOrderToPaid } from '../controllers/OrderController.js'
 import { isAdmin, protect } from '../middleware/auth.js'
 
-const router = Router()
-
-// Re-route into the order routers
-router.use('/:userId/orders', protect, isAdmin, OrderRoutes)
+const router = Router({ mergeParams: true })
 
 router.route('/')
-    .get(protect, isAdmin, getAllUsers)
-    .post(registerUser)
+    .get(protect, isAdmin, getAllOrders)
+    .post(protect, createOrder)
 
-router.post('/login', authUser)
-
-router.route('/profile')
-    .get(protect, getUserProfile)
-    .put(protect, updateUserProfile)
+router.get('/myorders', protect, getMyOrders)
 
 router.route('/:id')
-    .get(protect, isAdmin, getUserById)
-    .put(protect, isAdmin, updateUser)
-    .delete(protect, isAdmin, deleteUser)
+    .get(protect, getOrderById)
+
+router.put('/:id/pay', protect, updateOrderToPaid)
 
 export default router
