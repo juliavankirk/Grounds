@@ -82,7 +82,7 @@ app.use("api/products", productsRoutes);
 app.use("api/carts", cartsRoutes);
 app.use("api/orders", ordersRoutes);
 
-app.get("/", (req, res) {
+app.get("/", (req, res) => {
     res.json({
         message:
         "Howdy MEVN dev!"
