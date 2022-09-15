@@ -1,5 +1,5 @@
-import asyncHandler from '../middleware/asyncHandler.js'
-import Order from '../models/OrderModel.js'
+const asyncHandler = require('../middleware/asyncHandler.js');
+const Order = require('../models/OrderModel.js');
 
 /**
  * @desc        Fetch all orders

@@ -1,5 +1,5 @@
-import asyncHandler from '../middleware/asyncHandler.js'
-import Product from '../models/ProductModel.js'
+const asyncHandler = require('../middleware/asyncHandler.js');
+const Product = require('../models/ProductModel.js');
 
 /** 
  * @desc        Fetch all products

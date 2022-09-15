@@ -1,8 +1,6 @@
-import { Router } from 'express'
-import { createOrder, getMyOrders, getAllOrders, getOrderById, updateOrderToPaid } from '../controllers/OrderController.js'
-import { isAdmin, protect } from '../middleware/auth.js'
-
-const router = Router({ mergeParams: true })
+const router = require('express').Router();
+const createOrder, getMyOrders, getAllOrders, getOrderById, updateOrderToPaid = require('../controllers/orderController');
+const isAdmin, protect = require('../middleware/auth.js');
 
 router.route('/')
     .get(protect, isAdmin, getAllOrders)

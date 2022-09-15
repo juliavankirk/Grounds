@@ -1,5 +1,5 @@
-import asyncHandler from '../middleware/asyncHandler.js'
-import User from '../models/UserModel.js'
+const asyncHandler = require('../middleware/asyncHandler.js');
+const User = require('../models/UserModel.js');
 
 /** 
  * @desc    Authenticate use & get token

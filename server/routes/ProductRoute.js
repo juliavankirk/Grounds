@@ -1,8 +1,6 @@
-import { Router } from 'express'
-import { getAllProducts, getProductById, createProduct, updateProduct, deleteProduct } from '../controllers/ProductController.js'
-import { isAdmin, protect } from '../middleware/auth.js'
-
-const router = Router()
+const router = require('express').Router();
+const getAllProducts, getProductById, createProduct, updateProduct, deleteProduct = require('../controllers/ProductController.js');
+const isAdmin, protect = require('../middleware/auth.js');
 
 router.route('/')
     .get(getAllProducts)
