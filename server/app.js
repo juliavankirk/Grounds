@@ -77,10 +77,10 @@ app.options('*', cors());
 app.use(cors());
 
 // Import routes
-app.use("api/users", usersRoutes);
-app.use("api/products", productsRoutes);
-app.use("api/carts", cartsRoutes);
-app.use("api/orders", ordersRoutes);
+app.use("api/user", usersRoutes);
+app.use("api/product", productsRoutes);
+app.use("api/cart", cartsRoutes);
+app.use("api/order", ordersRoutes);
 
 app.get("/", (req, res) => {
     res.json({
@@ -90,7 +90,7 @@ app.get("/", (req, res) => {
 })
 
 // POST - Create a new user
-app.post('/api/users', function (req, res, next) {
+app.post('/api/user', function (req, res, next) {
     var user = new User(req.body);
     user.save(function (err) {
         if (err) { return next(err); }
@@ -99,7 +99,7 @@ app.post('/api/users', function (req, res, next) {
 });
 
 // DELETE - Delete the user by given id
-app.delete('/api/users/:id', function (req, res, next) {
+app.delete('/api/user/:id', function (req, res, next) {
     var id = req.params.id;
     User.findOneAndDelete({ _id: id }, function (err, user) {
         if (err) { return next(err); }
@@ -112,7 +112,7 @@ app.delete('/api/users/:id', function (req, res, next) {
 });
 
 //POST - Create a new product
-app.post('/api/products', function (req, res, next) {
+app.post('/api/product', function (req, res, next) {
     var product = new Product(req.body);
     product.save(function (err) {
         if (err) { return next(err); }
@@ -121,7 +121,7 @@ app.post('/api/products', function (req, res, next) {
 });
 
 //GET - Read the list of products
-app.get('/api/products', function (req, res, next) {
+app.get('/api/product', function (req, res, next) {
     Product.find(function (err, products) {
         if (err) { return next(err); }
         res.status(201).json(products);
@@ -129,7 +129,7 @@ app.get('/api/products', function (req, res, next) {
 });
 
 // DELETE - Delete the product by given id
-app.delete('/api/products/:id', function (req, res, next) {
+app.delete('/api/product/:id', function (req, res, next) {
     var id = req.params.id;
     Product.findOneAndDelete({ _id: id }, function (err, product) {
         if (err) { return next(err); }
@@ -142,7 +142,7 @@ app.delete('/api/products/:id', function (req, res, next) {
 });
 
 //POST - Create a new order
-app.post('/api/orders', function (req, res, next) {
+app.post('/api/order', function (req, res, next) {
     var order = new Order(req.body);
     order.save(function (err) {
         if (err) { return next(err); }
@@ -151,7 +151,7 @@ app.post('/api/orders', function (req, res, next) {
 });
 
 //GET - Read the list of orders
-app.get('/api/orders', function (req, res, next) {
+app.get('/api/order', function (req, res, next) {
     Order.find(function (err, orders) {
         if (err) { return next(err); }
         res.status(201).json(orders);
@@ -159,7 +159,7 @@ app.get('/api/orders', function (req, res, next) {
 });
 
 //DELETE - Delete the list of orders
-app.delete('/api/orders', function(req, res, next){
+app.delete('/api/order', function(req, res, next){
     
 })
 
