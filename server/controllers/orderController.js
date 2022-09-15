@@ -1,107 +1,99 @@
-const asyncHandler = require('../middleware/asyncHandler.js');
-const Order = require('../models/OrderModel.js');
+const Order = require("../models/OrderModel");
+const {
+  verifyToken,
+  verifyTokenAndAuthorization,
+  verifyTokenAndAdmin,
+} = require("./verifyToken");
 
-/**
- * @desc        Fetch all orders
- * @route       GET /api/orders
- * @route       GET /api/users/:userId/orders
- * @access      Private/Admin
- */
-export const getAllOrders = asyncHandler(async (req, res) => {
-    let query = req.params.userId
-        ? { user: req.params.userId }
-        : {}
+const router = require("express").Router();
 
-    const orders = await Order.find(query).populate('user', 'name email').sort('-createdAt')
+//CREATE
 
-    res.status(200).json({ data: orders })
-})
+router.post("/", verifyToken, async (req, res) => {
+  const newOrder = new Order(req.body);
 
-/** 
- * @desc        Fetch a single order by id
- * @route       GET /api/orders/:id
- * @access      Private || Admin
- */
-export const getOrderById = asyncHandler(async (req, res) => {
-    const order = await Order.findById(req.params.id).populate('user', 'name email')
+  try {
+    const savedOrder = await newOrder.save();
+    res.status(200).json(savedOrder);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
-    if (!order) {
-        res.status(404)
-        throw new Error(`Order not found with the id of ${req.params.id}`)
-    }
+//UPDATE
+router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
+  try {
+    const updatedOrder = await Order.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: req.body,
+      },
+      { new: true }
+    );
+    res.status(200).json(updatedOrder);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
-    if (!req.user.isAdmin && !order.user.equals(req.user)) {
-        res.status(403)
-        throw new Error(`Not authorized to access this order.`)
-    }
+//DELETE
+router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
+  try {
+    await Order.findByIdAndDelete(req.params.id);
+    res.status(200).json("Order has been deleted...");
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
-    res.status(200).json({ data: order })
-})
+//GET USER ORDERS
+router.get("/find/:userId", verifyTokenAndAuthorization, async (req, res) => {
+  try {
+    const orders = await Order.find({ userId: req.params.userId });
+    res.status(200).json(orders);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
-/** 
- * @desc        Get logged in user orders
- * @route       GET /api/orders/myorders
- * @access      Private
- */
-export const getMyOrders = asyncHandler(async (req, res) => {
-    const orders = await Order.find({ user: req.user._id }).sort('-createdAt')
-    
-    res.status(200).json({ data: orders })
-})
+// //GET ALL
 
-/** 
- * @desc        Create new order for logged in user
- * @route       POST /api/orders
- * @access      Private
- */
-export const createOrder = asyncHandler(async (req, res) => {
-    const { orderItems, shippingAddress, paymentMethod, itemsPrice, shippingPrice, taxPrice, totalPrice } = req.body
+router.get("/", verifyTokenAndAdmin, async (req, res) => {
+  try {
+    const orders = await Order.find();
+    res.status(200).json(orders);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
-    if (orderItems && orderItems.length === 0 ) {
-        res.status(400)
-        throw new Error('The order items have not been choosen')
-    }
+// GET MONTHLY INCOME
 
-    const order = await Order.create({
-        user: req.user._id,
-        orderItems,
-        shippingAddress,
-        paymentMethod,
-        itemsPrice,
-        shippingPrice,
-        taxPrice,
-        totalPrice
-    })
-    
-    res.status(201).json({ data: order })
-})
+router.get("/income", verifyTokenAndAdmin, async (req, res) => {
+  const date = new Date();
+  const lastMonth = new Date(date.setMonth(date.getMonth() - 1));
+  const previousMonth = new Date(new Date().setMonth(lastMonth.getMonth() - 1));
 
-/** 
- * @desc        Update order to paid
- * @route       PUT /api/orders/:id/pay
- * @access      Private
- */
-export const updateOrderToPaid = asyncHandler(async (req, res) => {
-    const { id, status, updateTime, emailAddress } = req.body
-    const order = await Order.findById(req.params.id)
-    
-    if (!order) {
-        res.status(404)
-        throw new Error(`Order not found with the id of ${req.params.id}`)
-    }
+  try {
+    const income = await Order.aggregate([
+      { $match: { createdAt: { $gte: previousMonth } } },
+      {
+        $project: {
+          month: { $month: "$createdAt" },
+          sales: "$amount",
+        },
+      },
+      {
+        $group: {
+          _id: "$month",
+          total: { $sum: "$sales" },
+        },
+      },
+    ]);
+    res.status(200).json(income);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
-    order.isPaid = true
-    order.paidAt = Date.now()
-    order.paymentResult = {
-        id,
-        status,
-        updateTime,
-        emailAddress,
-    }
-
-    await order.save()
-
-    await order.populate('user', 'name email').execPopulate()
-
-    res.status(200).json({ data: order })
-})
+module.exports = router;

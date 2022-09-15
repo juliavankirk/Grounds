@@ -1,137 +1,94 @@
-const asyncHandler = require('../middleware/asyncHandler.js');
-const User = require('../models/UserModel.js');
+const User = require("../models/UserModel");
+const {
+  verifyToken,
+  verifyTokenAndAuthorization,
+  verifyTokenAndAdmin,
+} = require("./verifyToken");
 
-/** 
- * @desc    Authenticate use & get token
- * @route   POST /api/users/login
- * @access  Public
- */
-export const authUser = asyncHandler(async (req, res) => {
-    const { email, password } = req.body
+const router = require("express").Router();
 
-    const user = await User.findOne({ email }).select('+password')
+//UPDATE
+router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
+  if (req.body.password) {
+    req.body.password = CryptoJS.AES.encrypt(
+      req.body.password,
+      process.env.PASS_SEC
+    ).toString();
+  }
 
-    if(user && await user.matchPassword(password)) {
-        res.status(200).json({
-            data: user.toObject()
-        })
-    } else {
-        res.status(422)
-        throw new Error(`These credentials do not match our records.`)
-    }
-})
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: req.body,
+      },
+      { new: true }
+    );
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
-/** 
- * @desc    Register a new user
- * @route   POST /api/users
- * @access  Public
- */
-export const registerUser = asyncHandler(async (req, res) => {
-    const { name, email, password } = req.body
+//DELETE
+router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res.status(200).json("User has been deleted...");
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
-    const user = await User.create({ name, email, password })
-    
-    res.status(201).json({
-        data: user.toObject()
-    })
-})
+//GET USER
+router.get("/find/:id", verifyTokenAndAdmin, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    const { password, ...others } = user._doc;
+    res.status(200).json(others);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
-/** 
- * @desc    Get logged in user
- * @route   GET /api/users/profile
- * @access  Private
- */
-export const getUserProfile = asyncHandler(async (req, res) => {
-    res.status(200).json({
-        data: req.user
-    })
-})
+//GET ALL USER
+router.get("/", verifyTokenAndAdmin, async (req, res) => {
+  const query = req.query.new;
+  try {
+    const users = query
+      ? await User.find().sort({ _id: -1 }).limit(5)
+      : await User.find();
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
-/** 
- * @desc    Update logged in user data
- * @route   PUT /api/users/profile
- * @access  Private
- */
-export const updateUserProfile = asyncHandler(async (req, res) => {
-    const { name, email, password } = req.body
-    
-    req.user.name = name || req.user.name
-    req.user.email = email || req.user.email
-    if (password) req.user.password = password
+//GET USER STATS
 
-    await req.user.save()
-    
-    res.status(200).json({
-        data: req.user.toObject()
-    })
-})
+router.get("/stats", verifyTokenAndAdmin, async (req, res) => {
+  const date = new Date();
+  const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
 
-/** 
- * @desc    Get all users
- * @route   GET /api/users
- * @access  Private/Admin
- */
-export const getAllUsers = asyncHandler(async (_, res) => {
-    const users = await User.find({})
-    
-    res.status(200).json({ data: users })
-})
+  try {
+    const data = await User.aggregate([
+      { $match: { createdAt: { $gte: lastYear } } },
+      {
+        $project: {
+          month: { $month: "$createdAt" },
+        },
+      },
+      {
+        $group: {
+          _id: "$month",
+          total: { $sum: 1 },
+        },
+      },
+    ]);
+    res.status(200).json(data)
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
-/**
- * @desc    Get user by id
- * @route   GET /api/users/:id
- * @access  Private/Admin
- */
-export const getUserById = asyncHandler(async (req, res) => {
-    const user = await User.findById(req.params.id)
-
-    if (!user) {
-        res.status(404)
-        throw new Error(`User not found with the id of ${req.params.id}`)
-    }
-
-    res.status(200).json({ data: user })
-})
-
-
-/**
- * @desc    Update user data by id
- * @route   PUT /api/users/:id
- * @access  Private/Admin
- */
-export const updateUser = asyncHandler(async (req, res) => {
-    const user = await User.findById(req.params.id)
-
-    if (!user) {
-        res.status(404)
-        throw new Error(`User not found with the id of ${req.params.id}`)
-    }
-
-    const { name, email, isAdmin } = req.body
-
-    user.name = name || user.name
-    user.email = email || user.email
-    user.isAdmin = isAdmin
-
-    await user.save()
-    
-    res.status(200).json({ data: user })
-})
-
-/** 
- * @desc    Delete user by id
- * @route   DELETE /api/users/:id
- * @access  Private/Admin
- */
-export const deleteUser = asyncHandler(async (req, res) => {
-    const user = await User.findById(req.params.id)
-
-    if (!user) {
-        res.status(404)
-        throw new Error(`User not found with the id of ${req.params.id}`)
-    }
-
-    await user.remove()
-    
-    res.status(204).send()
-})
+module.exports = router;

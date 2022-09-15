@@ -1,98 +1,84 @@
-const asyncHandler = require('../middleware/asyncHandler.js');
-const Product = require('../models/ProductModel.js');
+const Product = require("../models/ProductModel");
+const {
+  verifyToken,
+  verifyTokenAndAuthorization,
+  verifyTokenAndAdmin,
+} = require("./verifyToken");
 
-/** 
- * @desc        Fetch all products
- * @route       GET /api/products
- * @access      Public
- */
-export const getAllProducts = asyncHandler(async (_, res) => {
-    const products = await Product.find({})
-    
-    res.status(200).json({ data: products })
-})
+const router = require("express").Router();
 
+//CREATE
 
-/** 
- * @desc        Fetch a single product by id
- * @route       GET /api/products/:id
- * @access      Public
- */
-export const getProductById = asyncHandler(async (req, res) => {
-    const product = await Product.findById(req.params.id)
-    
-    if (!product) {
-        res.status(404)
-        throw new Error(`Product not found with the id of ${req.params.id}`)
+router.post("/", verifyTokenAndAdmin, async (req, res) => {
+  const newProduct = new Product(req.body);
+
+  try {
+    const savedProduct = await newProduct.save();
+    res.status(200).json(savedProduct);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//UPDATE
+router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
+  try {
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: req.body,
+      },
+      { new: true }
+    );
+    res.status(200).json(updatedProduct);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//DELETE
+router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
+  try {
+    await Product.findByIdAndDelete(req.params.id);
+    res.status(200).json("Product has been deleted...");
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//GET PRODUCT
+router.get("/find/:id", async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    res.status(200).json(product);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//GET ALL PRODUCTS
+router.get("/", async (req, res) => {
+  const qNew = req.query.new;
+  const qCategory = req.query.category;
+  try {
+    let products;
+
+    if (qNew) {
+      products = await Product.find().sort({ createdAt: -1 }).limit(1);
+    } else if (qCategory) {
+      products = await Product.find({
+        categories: {
+          $in: [qCategory],
+        },
+      });
+    } else {
+      products = await Product.find();
     }
 
-    res.status(200).json({ data: product })
-})
+    res.status(200).json(products);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
-/**
- * @desc        Create a product
- * @route       POST /api/products
- * @access      Private/Admin
- */
-export const createProduct = asyncHandler(async (req, res) => {
-    const product = await Product.create({
-        user: req.user._id,
-        name: 'Sample name',
-        image: '/images/sample.jpg',
-        brand: 'Sample brand',
-        category: 'Sample category',
-        description: 'Sample description',
-        rating: 0,
-        numReviews: 0,
-        price: 0,
-        countInStock: 0
-    })
-
-    res.status(201).json({ data: product })
-})
-
-/**
- * @desc        Update product by id
- * @route       PUT /api/products/:id
- * @access      Private/Admin
- */
-export const updateProduct = asyncHandler(async (req, res) => {
-    const { name, image, brand, category, description, price, countInStock } = req.body
-
-    const product = await Product.findById(req.params.id)
-
-    if (!product) {
-        res.status(404)
-        throw new Error(`Product not found with the id of ${req.params.id}`)
-    }
-
-    product.name = name/*  || product.name */
-    product.image = image/*  || product.image */
-    product.brand = brand/*  || product.brand */
-    product.price = price/*  || product.price */
-    product.category = category/*  || product.category */
-    product.description = description/*  || product.description */
-    product.countInStock = countInStock/*  || product.countInStock */
-
-    await product.save()
-
-    res.status(200).json({ data: product })
-})
-
-/**
- * @desc        Remove product by id
- * @route       DELETE /api/products/:id
- * @access      Private/Admin
- */
-export const deleteProduct = asyncHandler(async (req, res) => {
-    const product = await Product.findById(req.params.id)
-
-    if (!product) {
-        res.status(404)
-        throw new Error(`Product not found with the id of ${req.params.id}`)
-    }
-
-    await product.remove()
-
-    res.status(204).send()
-})
+module.exports = router;

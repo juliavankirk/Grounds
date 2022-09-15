@@ -7,9 +7,9 @@ var history = require('connect-history-api-fallback');
 const bodyParser = require('body-parser');
 
 //Routes
-const userRoute = require("./controllers/userController");
-const productRoute = require('product', productSchema);
-const orderRoute = require('order', orderSchema);
+const userRoute = require('./controllers/userController');
+const productRoute = require('./controllers/productController');
+const orderRoute = require('./controllers/orderController');
 
 var app = express();
 
@@ -116,8 +116,7 @@ app.delete('/api/user/:id', function (req, res, next) {
         res.json(user);
     });
 });
-// Custom Error Handler Middleware
-app.use(notFound, errorHandler)
+
 
 //POST - Create a new product
 app.post('/api/product', function (req, res, next) {
