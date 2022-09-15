@@ -12,7 +12,6 @@ const productRoute = require('product', productSchema);
 const orderRoute = require('order', orderSchema);
 
 var app = express();
-var Schema = mongoose.Schema;
 
 // Variables
 var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/groundsDB';
