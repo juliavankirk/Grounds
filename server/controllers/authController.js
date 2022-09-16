@@ -8,6 +8,7 @@ router.post("/register", async (req, res) => {
   const newUser = new User({
     username: req.body.username,
     email: req.body.email,
+    //cryptojs library to encrypt password
     password: CryptoJS.AES.encrypt(
       req.body.password,
       process.env.PASS_SEC
@@ -23,7 +24,6 @@ router.post("/register", async (req, res) => {
 });
 
 //LOGIN
-
 router.post('/login', async (req, res) => {
     try{
         const user = await User.findOne(
