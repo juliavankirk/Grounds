@@ -14,7 +14,7 @@
 					"script": {
 						"exec": [
 							"pm.test(\"Create user test\", function(){\r",
-							"pm.response.to.have.status(201)\r",
+							"pm.response.to.have.status(200)\r",
 							"})\r",
 							"\r",
 							"var jsonData = pm.response.json();\r",
@@ -100,7 +100,7 @@
 					"script": {
 						"exec": [
 							"pm.test(\"Create product test\", function(){\r",
-							"pm.response.to.have.status(201)\r",
+							"pm.response.to.have.status(200)\r",
 							"})\r",
 							"\r",
 							"var jsonData = pm.response.json();\r",
