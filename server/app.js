@@ -1,4 +1,5 @@
 var express = require('express');
+var app = express();
 var mongoose = require('mongoose');
 var morgan = require('morgan');
 var path = require('path');
@@ -7,17 +8,18 @@ var history = require('connect-history-api-fallback');
 const bodyParser = require('body-parser');
 
 //Routes
+const authRoute = require('./controllers/authController');
 const userRoute = require('./controllers/userController');
 const productRoute = require('./controllers/productController');
 const orderRoute = require('./controllers/orderController');
+const cartRoute = require('./controllers/cartController');
 
-var app = express();
 
 // Variables
-var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/groundsDB';
+var mongoURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/groundsDB'; //changed from localhost to connect better to db (nodejs v17.x req)
 var port = process.env.PORT || 3001;
 
-app.use(bodyParser.json());
+
 
 // Connect to MongoDB
 mongoose.connect(mongoURI, 
@@ -30,44 +32,6 @@ mongoose.connect(mongoURI,
     console.log(`Connected to MongoDB with URI: ${mongoURI}`);
 });
 
-/**
- * var userSchema = new Schema({
-    forename: { type: String },
-    surename: { type: String },
-    id: { type: Number },
-    role: { type: String },
-    email: { type: String },
-    password: { type: String }
-});
-
-var productSchema = new Schema({
-    product_id: { type: Number },
-    name: { type: String },
-    quantity: { type: Number },
-    description: { type: String }
-});
-
-var cartSchema = new Schema({
-    cart_id: { type: Number },
-    total: { type: Number },
-    quantity: { type: Number }
-});
-
-var orderSchema = new Schema({
-    order_id: { type: Number },
-    country: { type: String },
-    city: { type: String },
-    street: { type: String },
-    postcode: { type: Number },
-    contact: { type: String }
-});
-
- * 
- */
-
-// Mongoose schema
-
-//Mongoose model
 
 
 // Create Express app
@@ -90,9 +54,11 @@ app.get("/", (req, res) => {
 })
 
 // Import routes
+app.use("api/authRoute", authRoute);
 app.use("api/user", userRoute);
 app.use("api/product", productRoute);
 app.use("api/order", orderRoute);
+app.use("api/carts", cartRoute);
 
 
 // POST - Create a new user
