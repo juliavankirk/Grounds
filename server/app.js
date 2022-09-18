@@ -54,7 +54,7 @@ app.get("/", (req, res) => {
 })
 
 // Import routes
-app.use("api/authRoute", authRoute);
+app.use("api/auth", authRoute);
 app.use("api/user", userRoute);
 app.use("api/product", productRoute);
 app.use("api/order", orderRoute);
