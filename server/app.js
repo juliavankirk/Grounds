@@ -7,19 +7,16 @@ var cors = require('cors');
 var history = require('connect-history-api-fallback');
 const bodyParser = require('body-parser');
 
-//Routes
+// Routes
 const authRoute = require('./controllers/authController');
 const userRoute = require('./controllers/userController');
 const productRoute = require('./controllers/productController');
 const orderRoute = require('./controllers/orderController');
 const cartRoute = require('./controllers/cartController');
 
-
 // Variables
 var mongoURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/groundsDB'; //changed from localhost to connect better to db (nodejs v17.x req)
 var port = process.env.PORT || 3001;
-
-
 
 // Connect to MongoDB
 mongoose.connect(mongoURI, 
@@ -32,10 +29,6 @@ mongoose.connect(mongoURI,
     console.log(`Connected to MongoDB with URI: ${mongoURI}`);
 });
 
-
-
-// Create Express app
-var app = express();
 // Parse requests of content-type 'application/json'
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -60,44 +53,12 @@ app.use("api/product", productRoute);
 app.use("api/order", orderRoute);
 app.use("api/carts", cartRoute);
 
-
-// POST - Create a new user
-app.post('/api/user', function (req, res, next) {
-    var user = new User(req.body);
-    user.save(function (err) {
-        if (err) { return next(err); }
-        res.status(201).json(user);
+app.get("/api", function (req, res) {
+    res.json({
+      message:
+        "This route is used for newman-wait that runs with the npm test command.",
     });
-});
-
-// DELETE - Delete the user by given id
-app.delete('/api/user/:id', function (req, res, next) {
-    var id = req.params.id;
-    User.findOneAndDelete({ _id: id }, function (err, user) {
-        if (err) { return next(err); }
-        if (user == null) {
-            return res.status(404).json(
-                { "message": "User not found" });
-        }
-        res.json(user);
-    });
-});
-
-
-//POST - Create a new product
-app.post('/api/product', function (req, res, next) {
-    var product = new Product(req.body);
-    product.save(function (err) {
-        if (err) { return next(err); }
-        res.status(201).json(product);
-    });
-});
-
-
-// Catch all non-error handler for api (i.e., 404 Not Found)
-app.use('/api/*', function (req, res) {
-    res.status(404).json({ 'message': 'Not Found' });
-});
+  });
 
 // Configuration for serving frontend in production mode
 // Support Vuejs HTML 5 history mode
