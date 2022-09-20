@@ -8,7 +8,7 @@ var history = require('connect-history-api-fallback');
 const bodyParser = require('body-parser');
 
 // Routes
-const authRoute = require('./controllers/authController');
+const authRoute = require('./controllers/auth');
 const userRoute = require('./controllers/userController');
 const productRoute = require('./controllers/productController');
 const orderRoute = require('./controllers/orderController');
