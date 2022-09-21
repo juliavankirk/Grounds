@@ -1,5 +1,7 @@
 const router = require("express").Router();
 const User = require("../models/UserModel");
+const dotenv = require('dotenv');
+dotenv.config();
 const CryptoJS = require("crypto-js"); // Encryption library
 const jwt = require("jsonwebtoken"); // Library that generates token for each user, for more security
 

@@ -7,28 +7,69 @@
 	},
 	"item": [
 		{
-			"name": "Create user",
+			"name": "Register user",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Create user test\", function(){\r",
-							"pm.response.to.have.status(200)\r",
-							"})\r",
-							"\r",
-							"var jsonData = pm.response.json();\r",
-							"pm.test(\"Validation JSON data test\", function(){\r",
-							"pm.expect(jsonData.forename).to.eql('Ilon');\r",
-							"pm.expect(jsonData.surename).to.eql('Musk');\r",
-							"pm.expect(jsonData.id).to.eql(9912191111);\r",
-							"pm.expect(jsonData.role).to.eql('coder');\r",
-							"pm.expect(jsonData.email).to.eql('coder@gmail.com');\r",
-							"pm.expect(jsonData.password).to.eql('ldhei25+4-3fge');\r",
+							"pm.test(\"Register user test\", function(){\r",
+							"pm.response.to.have.status(201)\r",
 							"});\r",
 							"\r",
-							"pm.globals.set(\"user_id\", jsonData._id);\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.globals.set(\"user_id\", jsonData._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"test\",\r\n    \"forename\":\"{{$randomFirstName}}\",\r\n    \"surname\":\"{{$randomLastName}}\",\r\n    \"email\":\"{{$randomEmail}}\",\r\n    \"password\":\"test\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/auth/register",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Login test\", function(){\r",
+							"pm.response.to.have.status(200)\r",
+							"});\r",
 							"\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.globals.set(\"token\", jsonData.accessToken);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
 							""
 						],
 						"type": "text/javascript"
@@ -40,7 +81,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n\"forename\": \"Ilon\", \r\n\"surename\": \"Musk\",\r\n\"id\": 9912191111, \r\n\"role\": \"coder\", \r\n\"email\": \"coder@gmail.com\",\r\n\"password\": \"ldhei25+4-3fge\"\r\n}",
+					"raw": "{\r\n    \"username\":\"test\",\r\n    \"password\":\"test\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -48,44 +89,49 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/users",
+					"raw": "{{baseURL}}/auth/login",
 					"host": [
-						"localhost"
+						"{{baseURL}}"
 					],
-					"port": "3001",
 					"path": [
-						"api",
-						"users"
+						"auth",
+						"login"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Delete user by id",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
+			"name": "Update user",
 			"request": {
-				"method": "DELETE",
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"{{$randomEmail}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "localhost:3001/api/users/{{user_id}}",
+					"raw": "{{baseURL}}/user/{{user_id}}",
 					"host": [
-						"localhost"
+						"{{baseURL}}"
 					],
-					"port": "3001",
 					"path": [
-						"api",
-						"users",
+						"user",
 						"{{user_id}}"
 					]
 				}
@@ -93,36 +139,159 @@
 			"response": []
 		},
 		{
-			"name": "Create new product",
+			"name": "Delete user",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/user/{{user_id}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"user",
+						"{{user_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/user/find/{{user_id}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"user",
+						"find",
+						"{{user_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all users",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Create product test\", function(){\r",
-							"pm.response.to.have.status(200)\r",
-							"})\r",
-							"\r",
-							"var jsonData = pm.response.json();\r",
-							"pm.test(\"Validation JSON data test\", function(){\r",
-							"pm.expect(jsonData.product_id).to.eql(15149512);\r",
-							"pm.expect(jsonData.name).to.eql('productname here');\r",
-							"pm.expect(jsonData.quantity).to.eql(29);\r",
-							"pm.expect(jsonData.description).to.eql('description here');\r",
-							"});\r",
-							"\r",
-							"pm.globals.set(\"product_id\", jsonData._id);"
+							""
 						],
 						"type": "text/javascript"
 					}
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/user",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get users stats",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/user/stats",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"user",
+						"stats"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.globals.set(\"prod_id\", jsonData._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n\"product_id\": 15149512,\r\n\"name\": \"productname here\",\r\n\"quantity\": 29,\r\n\"description\": \"description here\"\r\n}",
+					"raw": "{\r\n    \"title\": \"title\",\r\n    \"desc\": \"description\",\r\n    \"img\": \"link\",\r\n    \"categories\": [\"cat1\",\"cat3\"],\r\n    \"size\": \"normal\",\r\n    \"color\": \"color\",\r\n    \"price\": 255\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -130,53 +299,136 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/products",
+					"raw": "{{baseURL}}/product",
 					"host": [
-						"localhost"
+						"{{baseURL}}"
 					],
-					"port": "3001",
 					"path": [
-						"api",
-						"products"
+						"product"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "List of products",
+			"name": "Update product",
 			"request": {
-				"method": "GET",
+				"method": "PUT",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"title12\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "localhost:3001/api/products",
+					"raw": "{{baseURL}}/product/{{prod_id}}",
 					"host": [
-						"localhost"
+						"{{baseURL}}"
 					],
-					"port": "3001",
 					"path": [
-						"api",
-						"products"
+						"product",
+						"{{prod_id}}"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Delete product by id",
+			"name": "Delete product",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:3001/api/products/{{product_id}}",
+					"raw": "{{baseURL}}/product/{{prod_id}}",
 					"host": [
-						"localhost"
+						"{{baseURL}}"
 					],
-					"port": "3001",
 					"path": [
-						"api",
-						"products",
-						"{{product_id}}"
+						"product",
+						"{{prod_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get product",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/product/find/{{prod_id}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"product",
+						"find",
+						"{{prod_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get products test\", function(){\r",
+							"pm.response.to.have.status(200)\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/product",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"product"
 					]
 				}
 			},
@@ -184,12 +436,34 @@
 		},
 		{
 			"name": "Create order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.globals.set(\"order_id\", jsonData._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n\"order_id\": 1514468486,\r\n\"country\": \"Sweden\",\r\n\"city\": \"Stockholm\",\r\n\"street\": \"Drottninggatan 28\",\r\n\"postcode\": 12496,\r\n\"contact\": \"+46705008963\"\r\n}",
+					"raw": "{\r\n      \"userId\":\"{{user_id}}\",\r\n        \"products\": [{\r\n        \"productId\":\"{{prod_id}}\",\r\n        \"quantity\": 5\r\n        }],\r\n  \r\n  \"amount\": 15,\r\n  \"address\": \"address\",\r\n  \"status\":\"pending\" \r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -197,37 +471,339 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3001/api/orders",
+					"raw": "{{baseURL}}/order",
 					"host": [
-						"localhost"
+						"{{baseURL}}"
 					],
-					"port": "3001",
 					"path": [
-						"api",
-						"orders"
+						"order"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Get list of orders",
+			"name": "Update order",
 			"request": {
-				"method": "GET",
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"amount\": 12\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "localhost:3001/api/orders",
+					"raw": "{{baseURL}}/order/{{order_id}}",
 					"host": [
-						"localhost"
+						"{{baseURL}}"
 					],
-					"port": "3001",
 					"path": [
-						"api",
-						"orders"
+						"order",
+						"{{order_id}}"
 					]
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Delete order",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/order/{{order_id}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"order",
+						"{{order_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user orders Copy",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/order/find/{{user_id}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"order",
+						"find",
+						"{{user_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all orders",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/order",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get monthly income",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/income",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"income"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create cart",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.globals.set(\"cart_id\", jsonData._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n      \"userId\":\"{{user_id}}\",\r\n        \"products\": [{\r\n        \"productId\":\"{{prod_id}}\",\r\n        \"quantity\": 5\r\n        }]\r\n  \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/cart",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"cart"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update cart",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"products\": [{\r\n        \"productId\":\"{{prod_id}}\",\r\n        \"quantity\": 12}]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/cart/{{cart_id}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"cart",
+						"{{cart_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete cart",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/cart/{{cart_id}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"cart",
+						"{{cart_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user cart",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/cart/find/{{user_id}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"cart",
+						"find",
+						"{{user_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all carts",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/cart",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"cart"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "http://localhost:3001/api"
 		}
 	]
 }
