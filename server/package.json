@@ -8,7 +8,7 @@
   "description": "Template for ExpressJS API with Mongoose for Web and Mobile Engineering (DIT341)",
   "main": "./app.js",
   "scripts": {
-    "start": "node ./app.js",
+    "start": "nodemon ./app.js",
     "dev": "nodemon ./app.js",
     "lint": "eslint .",
     "test": "cross-env-shell MONGODB_URI=mongodb://localhost:27017/serverTestDB \"npm run newman-server\"",
@@ -27,10 +27,11 @@
     "connect-history-api-fallback": "^1.6.0",
     "cors": "^2.8.5",
     "crypto-js": "^4.1.1",
+    "dotenv": "^16.0.2",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.9.1",
-    "mongoose": "^5.13.8",
+    "mongoose": "^5.13.15",
     "morgan": "^1.10.0"
   },
   "devDependencies": {

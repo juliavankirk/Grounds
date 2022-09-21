@@ -5,7 +5,6 @@ var morgan = require('morgan');
 var path = require('path');
 var cors = require('cors');
 var history = require('connect-history-api-fallback');
-const bodyParser = require('body-parser');
 
 // Routes
 const authRoute = require('./controllers/authController');
@@ -15,7 +14,7 @@ const orderRoute = require('./controllers/orderController');
 const cartRoute = require('./controllers/cartController');
 
 // Variables
-var mongoURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/groundsDB'; //changed from localhost to connect better to db (nodejs v17.x req)
+var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/groundsDb'; //changed from localhost to connect better to db (nodejs v17.x req)
 var port = process.env.PORT || 3001;
 
 // Connect to MongoDB
@@ -47,11 +46,12 @@ app.get("/", (req, res) => {
 })
 
 // Import routes
-app.use("api/auth", authRoute);
-app.use("api/user", userRoute);
-app.use("api/product", productRoute);
-app.use("api/order", orderRoute);
-app.use("api/carts", cartRoute);
+app.use('/api/auth', authRoute);
+app.use('/api/user', userRoute);
+app.use('/api/product', productRoute);
+app.use('/api/order', orderRoute);
+app.use('/api/cart', cartRoute);
+app.use('/api/income', orderRoute);
 
 app.get("/api", function (req, res) {
     res.json({
