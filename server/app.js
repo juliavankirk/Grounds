@@ -14,7 +14,7 @@ const orderRoute = require('./controllers/orderController');
 const cartRoute = require('./controllers/cartController');
 
 // Variables
-var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/groundsDb'; //changed from localhost to connect better to db (nodejs v17.x req)
+var mongoURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/groundsDb'; //changed from localhost to connect better to db (nodejs v17.x req)
 var port = process.env.PORT || 3001;
 
 // Connect to MongoDB
