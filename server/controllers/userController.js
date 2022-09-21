@@ -8,7 +8,7 @@ const {
 const router = require("express").Router();
 
 //UPDATE
-router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
+router.put("/:id", verifyTokenAndAuthorization, async (req, res) => { // Middleware
   if (req.body.password) {
     req.body.password = CryptoJS.AES.encrypt(
       req.body.password,
