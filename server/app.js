@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var mongoose = require('mongoose');
+const dotenv = require('dotenv');
 var morgan = require('morgan');
 var path = require('path');
 var cors = require('cors');
@@ -17,6 +18,8 @@ const cartRoute = require('./controllers/cartController');
 var mongoURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/groundsDb'; //changed from localhost to connect better to db (nodejs v17.x req)
 var port = process.env.PORT || 3001;
 
+dotenv.config();
+
 // Connect to MongoDB
 mongoose.connect(mongoURI, 
     { useNewUrlParser: true, useUnifiedTopology: true }, function (err) {
@@ -30,6 +33,7 @@ mongoose.connect(mongoURI,
 
 // Parse requests of content-type 'application/json'
 app.use(express.urlencoded({ extended: true }));
+// To pass any json file
 app.use(express.json());
 // HTTP request logger
 app.use(morgan('dev'));
@@ -47,10 +51,10 @@ app.get("/", (req, res) => {
 
 // Import routes
 app.use('/api/auth', authRoute);
-app.use('/api/user', userRoute);
-app.use('/api/product', productRoute);
-app.use('/api/order', orderRoute);
-app.use('/api/cart', cartRoute);
+app.use('/api/users', userRoute);
+app.use('/api/products', productRoute);
+app.use('/api/orders', orderRoute);
+app.use('/api/carts', cartRoute);
 app.use('/api/income', orderRoute);
 
 app.get("/api", function (req, res) {

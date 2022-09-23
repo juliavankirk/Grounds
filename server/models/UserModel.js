@@ -26,7 +26,7 @@ const UserSchema = new mongoose.Schema(
     },
     isAdmin: { // Created user will never be admin
       type: Boolean,
-      default: true,
+      default: false
     },
   },
   { timestamps: true } // Created at and Updated at times logged

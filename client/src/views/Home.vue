@@ -48,6 +48,14 @@ export default {
 .hero {
   color: #fff;
   background: #000;
+  background-size: cover;
+  -webkit-background-size: 100% 100%;
+  -moz-background-size: 100% 100%;
+  -o-background-size: 100% 100%;
+  background-size: 100% 100%;
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
   display: flex;
   flex: 1 0 auto;
   justify-content: center;
@@ -55,14 +63,8 @@ export default {
   padding: 0;
   box-sizing: border-box;
   align-items:center;
-
-  @media (min-width: breakpoints.tabletMin) {
-    flex-direction: row;
-  }
 }
-header {
 
-}
 .btn_message {
   margin-bottom: 1em;
   color: #000;

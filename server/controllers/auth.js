@@ -7,6 +7,8 @@ const jwt = require("jsonwebtoken"); // Library that generates token for each us
 
 //REGISTER
 router.post("/register", async (req, res) => {
+
+  // Save newUser to db as a promise
   const newUser = new User({
     username: req.body.username,
     forename: req.body.forename,
@@ -20,7 +22,9 @@ router.post("/register", async (req, res) => {
   });
 
   try {
+    // Waits for newUser promise before logging
     const savedUser = await newUser.save();
+    // Save to client side / 201 means successfully edited
     res.status(201).json(savedUser);
   } catch (err) {
     res.status(500).json(err);
@@ -36,7 +40,7 @@ router.post('/login', async (req, res) => {
             }
         );
 
-        !user && res.status(401).json("Incorrrect username!");
+        if (!user) return res.status(401).json("Incorrrect username!");
 
         const hashedPassword = CryptoJS.AES.decrypt( // Decrypt password
             user.password, 
@@ -47,8 +51,9 @@ router.post('/login', async (req, res) => {
         const originalPassword = hashedPassword.toString(CryptoJS.enc.Utf8); // Parameter used for special characters
         const inputPassword = req.body.password;
         
-        originalPassword != inputPassword && 
-            res.status(401).json("Incorrect password!");
+        if (originalPassword != inputPassword) {
+          return res.status(401).json("Incorrect password!");
+        }
 
         const accessToken = jwt.sign( // Once information checks
         {
@@ -56,14 +61,15 @@ router.post('/login', async (req, res) => {
             isAdmin: user.isAdmin,
         },
         process.env.JWT_SEC,
-            {expiresIn:"3d"}
+        // Access token expires every three days
+            { expiresIn:"3d" }
         );
   
         const { password, ...others } = user._doc; // Pass in mongoDB document
-        res.status(200).json({...others, accessToken}); // Hides password from being shown
+        return res.status(200).json({...others, accessToken}); // Hides password from being shown
 
-    }catch(err){
-        res.status(500).json(err);
+    } catch(err) {
+        return res.status(500).json(err);
     }
 
 });

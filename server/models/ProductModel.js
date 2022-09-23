@@ -19,7 +19,7 @@ const ProductSchema = new mongoose.Schema(
       type: Array 
     },
     size: { 
-      type: Array 
+      type: String 
     },
     geography: { 
       type: String

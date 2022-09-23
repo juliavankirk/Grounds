@@ -3,10 +3,12 @@ const jwt = require("jsonwebtoken");
 const verifyToken = (req, res, next) => { // Middleware
   const authHeader = req.headers.token;
   if (authHeader) {
-    const token = authHeader.split(" ")[1];
+    const token = authHeader.split(" ")[1]; // to allow a space between token and bearer
     jwt.verify(token, process.env.JWT_SEC, (err, user) => {
-      if (err) res.status(403).json("Token is not valid!");
+      if (err) res.status(403).json("Token is invalid!");
+      // Assign requested user to user
       req.user = user;
+      // Leave this function to continue running parent function
       next();
     });
   } else {
@@ -19,7 +21,7 @@ const verifyTokenAndAuthorization = (req, res, next) => {
     if (req.user.id === req.params.id || req.user.isAdmin) {
       next();
     } else {
-      res.status(403).json("You are not alowed to do that!");
+      res.status(403).json("You are not allowed to do that!");
     }
   });
 };

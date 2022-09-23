@@ -20,7 +20,7 @@ router.put("/:id", verifyTokenAndAuthorization, async (req, res) => { // Middlew
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
       {
-        $set: req.body,
+        $set: req.body, // Sets requested body into user
       },
       { new: true }
     );
@@ -56,7 +56,9 @@ router.get("/", verifyTokenAndAdmin, async (req, res) => {
   const query = req.query.new;
   try {
     const users = query
+    // filters users by query sorted by id, showing 5 at a time
       ? await User.find().sort({ _id: -1 }).limit(5)
+      // otherwise show all users
       : await User.find();
     res.status(200).json(users);
   } catch (err) {
@@ -72,16 +74,19 @@ router.get("/stats", verifyTokenAndAdmin, async (req, res) => {
 
   try {
     const data = await User.aggregate([
+      // Searches users created in the past year
       { $match: { createdAt: { $gte: lastYear } } },
       {
         $project: {
+          // Assign month from created at value to month
           month: { $month: "$createdAt" },
         },
       },
       {
         $group: {
+          // Group query by month
           _id: "$month",
-          total: { $sum: 1 },
+          total: { $sum: 1 }, // Tallies every registered user
         },
       },
     ]);
