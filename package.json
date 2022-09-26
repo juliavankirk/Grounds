@@ -23,5 +23,9 @@
     "mongoose": "^6.6.0",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.19"
+  },
+  "devDependencies": {
+    "sass": "^1.55.0",
+    "sass-loader": "^10.1.1"
   }
 }

@@ -1,73 +1,52 @@
 <template>
   <div>
-    <b-jumbotron class="hero">
-      <template #header>
-        Discover the nuances of every note in our coffee.
-        <br/>
-        Enjoy our selected kit. One cup at a time.
-      </template>
-      <template #lead>
-        We believe that knowing the story behind your coffee is a powerful tale
-        that needs to be told. From where it was grown, to how it was handled
-        along the way, our coffee speaks for itself. 
-      </template>
-      <b-button class="btn_message" variant="primary" v-on:click="getMessage()" >Buy For 499:-</b-button>
-      <p>Message from the server:<br/>
-      {{ message }}</p>
-    </b-jumbotron>
-  </div>
+    <Header @toggle-menu-show="$emit('toggle-menu-show', $event)" />
+    <section class="categories">
+      <Category product="headphones" />
+      <Category product="speakers" />
+      <Category product="earphones" />
+    </section>
+    <PreviewOne />
+    <PreviewTwo />
+    <PreviewThree />
+    <AboutSection />
+    </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import { Api } from '@/Api'
-import { breakpoints } from '../MediaQueries'
+import Header from "../components/HomePage/Header.vue";
+import Category from "../components/HomePage/Category.vue"
+import PreviewOne from "../components/HomePage/PreviewOne.vue";
+import PreviewTwo from "../components/HomePage/PreviewTwo.vue";
+import PreviewThree from "../components/HomePage/PreviewThree.vue";
+import AboutSection from "../components/AboutSection.vue";
 
 export default {
-  name: 'home',
-  data() {
-    return {
-      message: 'none'
-    }
+  name: "Home",
+  components: {
+    Header,
+    Category,
+    PreviewOne,
+    PreviewTwo,
+    PreviewThree,
+    AboutSection,
   },
-  methods: {
-    getMessage() {
-      Api.get('/')
-        .then(response => {
-          this.message = response.data.message
-        })
-        .catch(error => {
-          this.message = error
-        })
-    }
-  }
-}
+  emits: ["toggle-menu-show"],
+};
 </script>
 
-<style>
-.hero {
-  color: #fff;
-  background: #000;
-  background-size: cover;
-  -webkit-background-size: 100% 100%;
-  -moz-background-size: 100% 100%;
-  -o-background-size: 100% 100%;
-  background-size: 100% 100%;
-  width: 100%;
-  height: auto;
-  min-height: 100vh;
-  display: flex;
-  flex: 1 0 auto;
-  justify-content: center;
-  flex-direction: column;
-  padding: 0;
-  box-sizing: border-box;
-  align-items:center;
-}
+<style lang="scss" scoped>
+.categories {
+  padding: 9.2rem 2.4rem 0 2.4rem;
 
-.btn_message {
-  margin-bottom: 1em;
-  color: #000;
-  background: #fff;
+  @media (min-width: 768px) {
+    display: flex;
+    justify-content: center;
+    padding: 9.6rem 4rem 0 4rem;
+  }
+
+  @media (min-width: 1205px) {
+    padding: 12rem 16.5rem 0 16.5rem;
+  }
 }
 </style>
