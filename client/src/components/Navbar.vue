@@ -89,6 +89,7 @@ export default {
 
   &__homeLink {
     display: flex;
+    margin-left: 8.5rem;
 
     @media (min-width: 768px) {
       margin-left: 4.2rem;
@@ -143,6 +144,7 @@ export default {
     background: url("../assets/svg/icon-user.svg");
     width: 2.3rem;
     height: 2rem;
+    right: 0;
     visibility: hidden;
 
     @media (min-width: 768px) {
