@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Product from './views/Product.vue'
 import Catalog from './views/Catalog.vue'
+import About from './views/About.vue'
 import Success from './views/Success.vue'
 import Login from './views/Login.vue'
 import Register from './views/Register.vue'
@@ -20,9 +21,14 @@ export default new Router({
       component: Home
     },
     {
-      path: '/catalog/:category',
+      path: '/catalog',
       name: 'catalog',
       component: Catalog
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: About
     },
     {
       path: '/products/:id',

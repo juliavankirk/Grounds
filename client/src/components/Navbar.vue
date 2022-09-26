@@ -52,7 +52,7 @@ export default {
 
   @media (min-width: 768px) {
     justify-content: flex-start;
-    padding: 3.2rem 0;
+    padding: 2.2rem 0;
     margin: 0 auto;
     width: 68.9rem;
   }
@@ -88,7 +88,7 @@ export default {
   }
 
   &__desktop-menu {
-    margin-left: 19.7rem;
+    margin-left: 33.2rem;
     display: none;
 
     @media (min-width: 1205px) {

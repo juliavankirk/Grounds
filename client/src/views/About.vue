@@ -13,14 +13,14 @@ import Header from '../components/CatalogPage/Header.vue';
 
 
 export default {
-  name: "Catalog",
+  name: "About",
   components: {
     Header,
   },
   emits: ["toggle-menu-show"],
   data() {
     return {
-      title: "Products"
+      title: "About"
     }
   }
 };

@@ -29,9 +29,6 @@ export default {
     background-image: url("../../assets/img/tablet-hero.jpg");
     background-position: center;
     background-size: cover;
-    font-size: 4rem;
-    line-height: 4.4rem;
-    letter-spacing: 0.143rem;
   }
 
   @media (min-width: 1205px) {
