@@ -29,7 +29,6 @@ export default {
     background-image: url("../../assets/img/tablet-hero.jpg");
     background-position: center;
     background-size: cover;
-    padding: 10.5rem 0 9.7rem 0;
     font-size: 4rem;
     line-height: 4.4rem;
     letter-spacing: 0.143rem;
