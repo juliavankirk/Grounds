@@ -5,7 +5,7 @@
     <section class="categories">
       <Category product="coffee" />
       <Category product="brewers" />
-      <Category product="mugss" />
+      <Category product="mugs" />
     </section>
     <PreviewOne />
     <PreviewTwo />

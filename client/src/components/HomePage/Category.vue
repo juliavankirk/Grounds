@@ -8,7 +8,7 @@
       id="coffee"
     />
     <img
-      v-if="product === 'brewer'"
+      v-if="product === 'brewers'"
       src="../../assets/img/cat-thumbnail-brewer.png"
       alt="brewers"
       class="category__thumbnail"
