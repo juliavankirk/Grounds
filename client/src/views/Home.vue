@@ -7,9 +7,6 @@
       <Category product="brewers" />
       <Category product="mugs" />
     </section>
-    <PreviewOne />
-    <PreviewTwo />
-    <PreviewThree />
     <AboutSection />
     </main>
     </div>
@@ -18,19 +15,13 @@
 <script>
 import Header from "../components/HomePage/Header.vue";
 import Category from "../components/HomePage/Category.vue"
-import PreviewOne from "../components/HomePage/PreviewOne.vue";
-import PreviewTwo from "../components/HomePage/PreviewTwo.vue";
-import PreviewThree from "../components/HomePage/PreviewThree.vue";
-import AboutSection from "../components/AboutSection.vue";
+import AboutSection from "../components/HomePage/AboutSection.vue";
 
 export default {
   name: "Home",
   components: {
     Header,
     Category,
-    PreviewOne,
-    PreviewTwo,
-    PreviewThree,
     AboutSection,
   },
   emits: ["toggle-menu-show"],
