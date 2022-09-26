@@ -21,11 +21,23 @@
         <router-link to="/about">About</router-link>
       </li>
     </ul>
+    <router-link
+      class="navbar__user-btn"
+      @click="$emit('toggle-menu-show', 'user')"
+      to="/login"
+    >
+      <img
+        src="../assets/svg/icon-user.svg"
+        alt="Account"
+        class="navbar__user-btn__icon"
+      />
+    </router-link>
     <button
       class="navbar__cart-btn"
       @click="$emit('toggle-menu-show', 'cart')"
     >
     </button>
+    
   </nav>
 </template>
 
@@ -124,7 +136,19 @@ export default {
 
     @media (min-width: 768px) {
       position: absolute;
-      right: 4rem;
+      right: 1rem;
+    }
+  }
+  &__user-btn {
+    background: url("../assets/svg/icon-user.svg");
+    width: 2.3rem;
+    height: 2rem;
+    visibility: hidden;
+
+    @media (min-width: 768px) {
+      position: absolute;
+      right: 5rem;
+      visibility: visible;
     }
   }
 }
