@@ -1,15 +1,17 @@
 <template>
   <div>
     <Header @toggle-menu-show="$emit('toggle-menu-show', $event)" />
+    <main>
     <section class="categories">
-      <Category product="headphones" />
-      <Category product="speakers" />
-      <Category product="earphones" />
+      <Category product="coffee" />
+      <Category product="brewers" />
+      <Category product="mugss" />
     </section>
     <PreviewOne />
     <PreviewTwo />
     <PreviewThree />
     <AboutSection />
+    </main>
     </div>
 </template>
 
