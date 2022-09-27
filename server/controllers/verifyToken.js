@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 const verifyToken = (req, res, next) => { // Middleware
-  const authHeader = req.headers.token;
+  const authHeader = req.headers['authorization'];
   if (authHeader) {
     const token = authHeader.split(" ")[1]; // to allow a space between token and bearer
     jwt.verify(token, process.env.JWT_SEC, (err, user) => {
@@ -12,7 +12,9 @@ const verifyToken = (req, res, next) => { // Middleware
       next();
     });
   } else {
+    console.log(token);
     return res.status(401).json("You are not authenticated!");
+    
   }
 };
 
