@@ -25,10 +25,11 @@ router.post("/register", async (req, res) => {
     })
     try {
       // Waits for newUser promise before logging
-      await newUser.save()
+      const savedUser = await newUser.save()
       // Save to client side / 201 means successfully edited
-      res.status(201).json(newUser);
+      res.status(201).json(savedUser);
     } catch (err) {
+      console.log('Promise rejection handling')
       res.status(500).json({ message: 'Internal server error' });
     }
   }
@@ -58,7 +59,7 @@ router.post('/login', async (req, res) => {
           { expiresIn: "3d" }
         );
         const { password, ...others } = user._doc; // Pass in mongoDB document
-        return res.status(200).json({ ...others, accessToken }); // Hides password from being shown
+        res.status(200).json({ ...others, accessToken }); // Hides password from being shown
       } else {
         res.status(401).json({ message: 'Wrong password' })
       }
@@ -66,39 +67,9 @@ router.post('/login', async (req, res) => {
       res.status(404).json({ message: 'User not found' })
     }
   } catch (err) {
-    return res.status(500).json({ message: 'Internal server error' });
+    console.log('Promise rejected')
+    res.status(500).json({ message: 'Internal server error' });
   }
 })
-
-//   if (!user) return res.status(401).json("User not found!");
-
-//   const hashedPassword = CryptoJS.AES.decrypt( // Decrypt password
-//     user.password,
-//     process.env.PASS_SEC
-//   );
-
-//   const originalPassword = hashedPassword.toString(CryptoJS.enc.Utf8); // Parameter used for special characters
-//   const inputPassword = req.body.password;
-
-//   if (originalPassword != inputPassword) {
-//     return res.status(401).json("Incorrect password!");
-//   }
-
-//   const accessToken = jwt.sign( // Once information checks
-//     {
-//       id: user._id,
-//       isAdmin: user.isAdmin,
-//     },
-//     process.env.JWT_SEC,
-//     // Access token expires every three days
-//     { expiresIn: "3d" }
-//   );
-
-//   const { password, ...others } = user._doc; // Pass in mongoDB document
-//   return res.status(200).json({ ...others, accessToken }); // Hides password from being shown
-
-// } catch (err) {
-//   return res.status(500).json({ message: 'Internal server error' });
-// }
 
 module.exports = router;
