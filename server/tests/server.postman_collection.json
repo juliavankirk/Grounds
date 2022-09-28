@@ -21,7 +21,7 @@
 							"pm.environment.set(\"user_id\", jsonData._id);\r",
 							"\r",
 							"pm.test(\"Data insertion test\", function () {\r",
-							"    pm.expect(jsonData.username).to.eql(\"test1\");\r",
+							"    pm.expect(jsonData.username).to.eql(\"test\");\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -33,7 +33,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\":\"test1\",\r\n    \"forename\":\"{{$randomFirstName}}\",\r\n    \"surname\":\"{{$randomLastName}}\",\r\n    \"email\":\"{{$randomEmail}}\",\r\n    \"password\":\"test\"\r\n}",
+					"raw": "{\r\n    \"username\":\"test\",\r\n    \"forename\":\"{{$randomFirstName}}\",\r\n    \"surname\":\"{{$randomLastName}}\",\r\n    \"email\":\"test@gmail.com\",\r\n    \"password\":\"test\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -87,7 +87,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\":\"test\",\r\n    \"password\":\"test\"\r\n}",
+					"raw": "{\r\n    \"email\":\"test@gmail.com\",\r\n    \"password\":\"test\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -387,7 +387,7 @@
 							"pm.environment.set(\"user_id\", jsonData._id);\r",
 							"\r",
 							"pm.test(\"Data insertion test\", function () {\r",
-							"    pm.expect(jsonData.username).to.eql(\"test1\");\r",
+							"    pm.expect(jsonData.username).to.eql(\"test\");\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -399,7 +399,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\":\"test1\",\r\n    \"forename\":\"{{$randomFirstName}}\",\r\n    \"surname\":\"{{$randomLastName}}\",\r\n    \"email\":\"{{$randomEmail}}\",\r\n    \"password\":\"test\"\r\n}",
+					"raw": "{\r\n    \"username\":\"test\",\r\n    \"forename\":\"{{$randomFirstName}}\",\r\n    \"surname\":\"{{$randomLastName}}\",\r\n    \"email\":\"test@gmail.com\",\r\n    \"password\":\"test\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -453,7 +453,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\":\"test\",\r\n    \"password\":\"test\"\r\n}",
+					"raw": "{\r\n    \"email\":\"test@gmail.com\",\r\n    \"password\":\"test\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
