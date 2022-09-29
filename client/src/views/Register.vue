@@ -10,6 +10,30 @@
           <div class="register__form__input__item no-margin">
             <div class="input-texts">
               <label
+                for="username"
+                :class="emptyFields.includes('username') ? 'red-label' : ''"
+                >Username</label
+              >
+              <p class="empty-message" v-if="emptyFields.includes('fusername')">
+                Username is required!
+              </p>
+            </div>
+            <input
+              v-model="user.username"
+              v-validate="'required'"
+              type="text"
+              name="username"
+              id="username"
+              ref="username"
+              :class="emptyFields.includes('username') ? 'empty-border' : ''"
+              @click="wipeError('username')"
+              @change="wipeError('username')"
+              spellcheck="false"
+            />
+          </div>
+          <div class="register__form__input__item no-margin">
+            <div class="input-texts">
+              <label
                 for="forename"
                 :class="emptyFields.includes('forename') ? 'red-label' : ''"
                 >First name</label
@@ -19,7 +43,7 @@
               </p>
             </div>
             <input
-              v-model="form.forename"
+              v-model="user.forename"
               v-validate="'required'"
               type="text"
               name="forename"
@@ -44,7 +68,7 @@
               </p>
             </div>
             <input
-              v-model="form.surname"
+              v-model="user.surname"
               v-validate="'required'"
               type="text"
               name="surname"
@@ -73,7 +97,7 @@
             </div>
 
             <input
-              v-model="form.email"
+              v-model="user.email"
               v-validate="'required'"
               type="email"
               name="email"
@@ -98,7 +122,7 @@
             </div>
 
             <input
-              v-model="form.password"
+              v-model="user.password"
               v-validate="'required'"
               type="password"
               name="password"
@@ -120,7 +144,6 @@
           type="submit"
           :value="'Register'"
           class="btn default-btn"
-          @click="register"
         />
       </div>
     </form>
@@ -135,49 +158,58 @@
 
 <script>
 import Header from '../components/ProductPage/Header.vue'
+import User from '../models/user'
 
 export default {
   name: "Register",
   components: { Header },
   emits: ["toggle-menu-show"],
   data: () => ({
-    form: {
-      forename: '',
-      surname: '',
-      email : '',
-      password: ''
-    },
+    user: new User('', '', '', '', ''),
     emptyFields: [],
     invalidEmail: false,
     submitted: false,
     successful: false,
     message: ''
     }),
+  computed: {
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn;
+    }
+  },
+  mounted() {
+    if (this.loggedIn) {
+      this.$router.push('/');
+    }
+  },
   methods: {
-    async register() {
-      try {
-        const response = await auth.register({
-          forename: this.form.forename,
-          surname: this.form.surname,
-          email: this.form.email,
-          password: this.form.password
-        })
-        this.$store.dispatch('setToken', response.data.token)
-        this.$store.dispatch('setUser', response.data.user)
-        this.$router.push({
-          name: 'catalog'
-        })
-      } catch (error) {
-        this.error = error.response.data.error
-        console.log(error);
-      }
-    },
-
     selectMethod(method) {
       this.picked = method;
     },
     submitHandler() {
+      this.message = '';
+      this.submitted = true;
+      this.$validator.validate().then(isValid => {
+        if (isValid) {
+          this.$store.dispatch('auth/register', this.user).then(
+            data => {
+              this.message = data.message;
+              this.successful = true;
+            },
+            error => {
+              this.message =
+                (error.response && error.response.data && error.response.data.message) ||
+                error.message ||
+                error.toString();
+              this.successful = false;
+            }
+          );
+        }
+      });
+
+
       const myRefs = [
+        this.$refs.username,
         this.$refs.forename,
         this.$refs.surname,
         this.$refs.email,

@@ -1,10 +1,9 @@
-import Api from '@/services/Api'
+export default function authHeader() {
+  let user = JSON.parse(localStorage.getItem('user'));
 
-export default {
-  register (credentials) {
-    return Api().post('/register', credentials)
-  },
-  login (credentials) {
-    return Api().post('/login', credentials)
+  if (user && user.accessToken) {
+    return { 'x-access-token': user.accessToken };       // for Node.js Express back-end
+  } else {
+    return {};
   }
 }
