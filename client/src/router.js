@@ -8,6 +8,7 @@ import About from './views/About.vue'
 import Success from './views/Success.vue'
 import Login from './views/Login.vue'
 import Register from './views/Register.vue'
+import Profile from './views/Profile.vue'
 
 Vue.use(Router)
 
@@ -52,6 +53,11 @@ export default new Router({
       path: '/register',
       name: 'register',
       component: Register,
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: Profile,
     }
   ]
 })

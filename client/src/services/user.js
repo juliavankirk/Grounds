@@ -5,8 +5,8 @@ export const userApi = {
     Api.get('/users/'),
   getUser: userId => 
     Api.get(`/users/find/${userId}`,),
-  updateUser: (userId, update) => 
-    Api.put(`/users/${userId}`, update),
+  updateUser: (userId) => 
+    Api.put(`/users/${userId}`),
   deleteUser: userId => 
     Api.delete(`/users/${userId}`),
   getUserStats: () => 

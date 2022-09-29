@@ -58,9 +58,9 @@
           </div>
           
         </section>
-        <h2 class="login__form__input__black">Have an account?
+        <h2 class="login__form__input__black">New to grounds?
           <span class="login__form__input__subheading">
-            <router-link to="/register">Sign in</router-link>
+            <router-link to="/register">Create an account</router-link>
           </span>
         </h2>
         <input

@@ -5,10 +5,10 @@ export const productApi = {
     Api.get('/products/'),
   getProduct: productId => 
     Api.get(`/product/find/${productId}`),
-  createProduct: productId => 
-    Api.post('/products/', productId),
-  updateProduct: (productId, update) => 
-    Api.put(`products/${productId}`, update),
+  createProduct: (productId, data) => 
+    Api.post('/products/', productId, data),
+  updateProduct: (productId, data) => 
+    Api.put(`products/${productId}`, data),
   deleteProduct: (productId) => 
     Api.delete(`/products/${productId}`)
 }
