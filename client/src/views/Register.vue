@@ -5,16 +5,16 @@
     <form class="register__form" @submit.prevent="submitHandler" novalidate>
       <div class="register__form__input" v-if="!successful">
         <h1 class="register__form__input__heading">Register your account</h1>
-        <h2 class="register__form__input__subheading">Please sign in to continue</h2>
+        <h2 class="register__form__input__subheading">Welcome to grounds!</h2>
         <section>
-          <div class="register__form__input__item no-margin">
+          <div class="register__form__input__item no-margin full-span">
             <div class="input-texts">
               <label
                 for="username"
                 :class="emptyFields.includes('username') ? 'red-label' : ''"
                 >Username</label
               >
-              <p class="empty-message" v-if="emptyFields.includes('fusername')">
+              <p class="empty-message" v-if="emptyFields.includes('username')">
                 Username is required!
               </p>
             </div>

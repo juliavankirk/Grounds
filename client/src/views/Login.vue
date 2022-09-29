@@ -3,35 +3,32 @@
   <Header @toggle-menu-show="$emit('toggle-menu-show', $event)" />
   <main class="login">
     <form class="login__form" @submit.prevent="submitHandler" novalidate>
-      <div class="login__form__input">
+      <div class="login__form__input" v-if="!successful">
         <h1 class="login__form__input__heading">Sign in</h1>
         <h2 class="login__form__input__subheading">Please sign in to continue</h2>
         <section>
           <div class="login__form__input__item no-margin full-span">
             <div class="input-texts">
               <label
-                for="email"
-                :class="emptyFields.includes('email') ? 'red-label' : ''"
-                >Email address</label
+                for="username"
+                :class="emptyFields.includes('username') ? 'red-label' : ''"
+                >Username</label
               >
-              <p class="empty-message" v-if="emptyFields.includes('email')">
-                Email is required!
-              </p>
-              <p class="empty-message" v-if="invalidEmail">
-                Invalid email address
+              <p class="empty-message" v-if="emptyFields.includes('username')">
+                Username is required!
               </p>
             </div>
-
             <input
-              v-model="user.email"
+              v-model="user.username"
               v-validate="'required'"
-              type="email"
-              name="email"
-              id="email"
-              ref="email"
-              :class="emptyFields.includes('email') ? 'empty-border' : ''"
-              @click="wipeError('email')"
-              @change="wipeError('email')"
+              type="text"
+              name="username"
+              id="username"
+              ref="username"
+              :class="emptyFields.includes('username') ? 'empty-border' : ''"
+              @click="wipeError('username')"
+              @change="wipeError('username')"
+              spellcheck="false"
             />
           </div>
           
@@ -59,49 +56,83 @@
               @change="wipeError('password')"
             />
           </div>
+          
         </section>
-        <h2 class="login__form__input__black">New to Grounds?
+        <h2 class="login__form__input__black">Have an account?
           <span class="login__form__input__subheading">
-            <router-link to="/register">Create an account</router-link>
+            <router-link to="/register">Sign in</router-link>
           </span>
         </h2>
         <input
           type="submit"
           :value="'Sign in'"
           class="btn default-btn"
-          @click="register"
         />
       </div>
     </form>
+    <div
+        v-if="message"
+        class="alert"
+        :class="successful ? 'alert-success' : 'alert-danger'"
+      >{{message}}</div>
   </main>
 </div>
 </template>
 
 <script>
 import Header from '../components/ProductPage/Header.vue'
-import auth from '@/services/auth'
+import User from '../models/user'
 
 export default {
   name: "Login",
   components: { Header },
   emits: ["toggle-menu-show"],
-  data() {
-    return {
-      email : '',
-      password: '',
-      emptyFields: [],
-      message: ''
-    };
+  data: () => ({
+    user: new User('', ''),
+    emptyFields: [],
+    invalidEmail: false,
+    submitted: false,
+    successful: false,
+    message: ''
+    }),
+  computed: {
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn;
+    }
+  },
+  mounted() {
+    if (this.loggedIn) {
+      this.$router.push('/');
+    }
   },
   methods: {
-    
-
     selectMethod(method) {
       this.picked = method;
     },
     submitHandler() {
+      this.message = '';
+      this.submitted = true;
+      this.$validator.validate().then(isValid => {
+        if (isValid) {
+          this.$store.dispatch('auth/login', this.user).then(
+            data => {
+              this.message = data.message;
+              this.successful = true;
+            },
+            error => {
+              this.message =
+                (error.response && error.response.data && error.response.data.message) ||
+                error.message ||
+                error.toString();
+              this.successful = false;
+            }
+          );
+        }
+      });
+
+
       const myRefs = [
-        this.$refs.email,
+        this.$refs.username,
         this.$refs.password
       ];
       myRefs.map((ref) => {
@@ -118,7 +149,18 @@ export default {
       if (this.invalidEmail) {
         this.invalidEmail = false;
       }
-    }
+    },
+    validateEmail() {
+      const email = this.$refs.email.value;
+      const validationResult = email
+        .toLowerCase()
+        .match(
+          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+        );
+      if (!validationResult && !this.emptyFields.includes("email")) {
+        this.invalidEmail = true;
+      }
+    },
   }
 }
 
@@ -175,6 +217,12 @@ input::-webkit-inner-spin-button {
       @media (min-width: 768px) {
         display: flex;
         flex-wrap: wrap;
+      }
+
+      .no-margin {
+        @media (min-width: 768px) {
+          margin-right: 0 !important;
+        }
       }
 
       .full-span {
