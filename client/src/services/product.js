@@ -1,5 +1,4 @@
-import { Api } from './Api';
-import authHeader from './auth-header';
+import Api from '@/services/Api'
 
 export const productApi = {
   getProducts: () => 
@@ -7,9 +6,9 @@ export const productApi = {
   getProduct: productId => 
     Api.get(`/product/find/${productId}`),
   createProduct: productId => 
-    Api.post('/products/', productId, { headers: authHeader() }),
+    Api.post('/products/', productId),
   updateProduct: (productId, update) => 
-    Api.put(`products/${productId}`, update, { headers: authHeader() }),
+    Api.put(`products/${productId}`, update),
   deleteProduct: (productId) => 
-    Api.delete(`/products/${productId}`, { headers: authHeader() })
+    Api.delete(`/products/${productId}`)
 }

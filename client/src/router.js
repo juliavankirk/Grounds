@@ -49,12 +49,9 @@ export default new Router({
       }
     },
     {
-      path: '/register,',
+      path: '/register',
       name: 'register',
       component: Register,
-      meta: {
-        requiresAuth: true
-      }
     }
   ]
 })

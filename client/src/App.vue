@@ -41,6 +41,13 @@ import data from "./data.json";
 export default {
   name: "App",
   components: { Footer, Menu, Cart },
+
+  computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    }
+  },
+
   data() {
     return {
       showMenu: false,
@@ -51,7 +58,12 @@ export default {
       products: data,
     };
   },
+
   methods: {
+    logOut() {
+      this.$store.dispatch('auth/logout');
+      this.$router.push('/login');
+    },
     toggleMenu(myVar) {
       if (myVar === "logo") {
         this.showMenu = false;

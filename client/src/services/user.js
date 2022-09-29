@@ -1,15 +1,14 @@
-import { Api } from './Api';
-import authHeader from './auth-header';
+import Api from '@/services/Api'
 
 export const userApi = {
   getAllUsers: () => 
-    Api.get('/users/', { headers: authHeader() }),
+    Api.get('/users/'),
   getUser: userId => 
-    Api.get(`/users/find/${userId}`, { headers: authHeader() }),
+    Api.get(`/users/find/${userId}`,),
   updateUser: (userId, update) => 
-    Api.put(`/users/${userId}`, update, { headers: authHeader() }),
+    Api.put(`/users/${userId}`, update),
   deleteUser: userId => 
-    Api.delete(`/users/${userId}`, { headers: authHeader() }),
+    Api.delete(`/users/${userId}`),
   getUserStats: () => 
-    Api.get('/users/stats', { headers: authHeader() })
+    Api.get('/users/stats')
 }

@@ -1,32 +1,37 @@
 <template>
 <div>
-
+  <Header @toggle-menu-show="$emit('toggle-menu-show', $event)" />
   <main class="login">
     <form class="login__form" @submit.prevent="submitHandler" novalidate>
       <div class="login__form__input">
-        <h1 class="login__form__input__heading">Login</h1>
-        <h2 class="clogin__form__input__subheading">Please enter your username and password to sign in.</h2>
+        <h1 class="login__form__input__heading">Sign in</h1>
+        <h2 class="login__form__input__subheading">Please sign in to continue</h2>
         <section>
           <div class="login__form__input__item no-margin full-span">
             <div class="input-texts">
               <label
-                for="username"
-                :class="emptyFields.includes('name') ? 'red-label' : ''"
-                >Username</label
+                for="email"
+                :class="emptyFields.includes('email') ? 'red-label' : ''"
+                >Email address</label
               >
-              <p class="empty-message" v-if="emptyFields.includes('name')">
-                Field can't be empty
+              <p class="empty-message" v-if="emptyFields.includes('email')">
+                Email is required!
+              </p>
+              <p class="empty-message" v-if="invalidEmail">
+                Invalid email address
               </p>
             </div>
+
             <input
-              type="text"
-              name="name"
-              id="name"
-              ref="name"
-              :class="emptyFields.includes('name') ? 'empty-border' : ''"
-              @click="wipeError('name')"
-              @change="wipeError('name')"
-              spellcheck="false"
+              v-model="user.email"
+              v-validate="'required'"
+              type="email"
+              name="email"
+              id="email"
+              ref="email"
+              :class="emptyFields.includes('email') ? 'empty-border' : ''"
+              @click="wipeError('email')"
+              @change="wipeError('email')"
             />
           </div>
           
@@ -38,11 +43,13 @@
                 >Password</label
               >
               <p class="empty-message" v-if="emptyFields.includes('password')">
-                Field can't be empty
+                Password is required!
               </p>
             </div>
 
             <input
+              v-model="user.password"
+              v-validate="'required'"
               type="password"
               name="password"
               id="password"
@@ -53,6 +60,17 @@
             />
           </div>
         </section>
+        <h2 class="login__form__input__black">New to Grounds?
+          <span class="login__form__input__subheading">
+            <router-link to="/register">Create an account</router-link>
+          </span>
+        </h2>
+        <input
+          type="submit"
+          :value="'Sign in'"
+          class="btn default-btn"
+          @click="register"
+        />
       </div>
     </form>
   </main>
@@ -60,29 +78,39 @@
 </template>
 
 <script>
+import Header from '../components/ProductPage/Header.vue'
+import auth from '@/services/auth'
 
 export default {
   name: "Login",
+  components: { Header },
   emits: ["toggle-menu-show"],
-
+  data() {
+    return {
+      email : '',
+      password: '',
+      emptyFields: [],
+      message: ''
+    };
+  },
   methods: {
+    
 
     selectMethod(method) {
       this.picked = method;
     },
     submitHandler() {
       const myRefs = [
-        this.$refs.username,
-        this.$refs.password,
+        this.$refs.email,
+        this.$refs.password
       ];
-
       myRefs.map((ref) => {
         if (ref.value === "") {
           this.emptyFields.push(ref.name);
         }
       });
-
     },
+    
     wipeError(field) {
       if (this.emptyFields.includes(field)) {
         this.emptyFields = this.emptyFields.filter((ref) => ref !== field);
@@ -90,12 +118,19 @@ export default {
       if (this.invalidEmail) {
         this.invalidEmail = false;
       }
-    },
-  },
-};
+    }
+  }
+}
+
 </script>
 
 <style lang="scss" scoped>
+* input[type="number"]::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  margin: 0;
+}
 .back-link {
   font-size: 1.5rem;
   line-height: 2.5rem;
@@ -106,56 +141,40 @@ export default {
   cursor: pointer;
   width: 32.7rem;
   transition: all 0.3s ease;
-
   &:hover {
     color: rgba(216, 125, 74, 1);
   }
-
   @media (min-width: 768px) {
     width: 68.9rem;
     margin-top: 3.3rem;
   }
-
   @media (min-width: 1205px) {
     margin-top: 7.9rem;
     width: 111rem;
     padding-left: 1rem;
   }
 }
-
 .empty-border {
   border: 0.2rem solid #ce382c !important;
 }
-
 .login {
   background: #fafafa;
   width: 100%;
-
   &__form {
     background: transparent;
-
     @media (min-width: 1205px) {
       display: flex;
       width: 111rem;
       margin: 0 auto;
-      margin-top: 3.7rem;
-      margin-bottom: 14.1rem;
     }
-
-    &__input{
+    &__input,
+    &__summary {
       background: white;
     }
-
     section {
       @media (min-width: 768px) {
         display: flex;
         flex-wrap: wrap;
-      }
-
-      .no-margin {
-        @media (min-width: 768px) {
-          margin-right: 0 !important;
-        }
       }
 
       .full-span {
@@ -165,37 +184,32 @@ export default {
           }
         }
       }
-    }
 
+    }
     &__input {
       width: 32.7rem;
       margin: 2.4rem auto 0 auto;
       padding: 2.4rem 2.4rem 3.1rem 2.4rem;
       border-radius: 0.8rem;
-
       @media (min-width: 768px) {
         width: 68.9rem;
         padding: 3rem 2.7rem;
       }
-
       @media (min-width: 1205px) {
         margin: 0;
       }
-
       &__heading {
         font-weight: 700;
         font-size: 2.8rem;
         line-height: 3.825rem;
         letter-spacing: 0.1rem;
         text-transform: uppercase;
-
         @media (min-width: 768px) {
           font-size: 3.2rem;
           line-height: 3.6rem;
           letter-spacing: 0.114rem;
         }
       }
-
       &__subheading {
         margin-top: 3.2rem;
         text-transform: uppercase;
@@ -205,47 +219,51 @@ export default {
         letter-spacing: 0.093rem;
         color: rgba(216, 125, 74, 1);
         margin-bottom: 1.6rem;
-
         @media (min-width: 768px) {
           margin-top: 4.1rem;
         }
       }
-
+      &__black {
+        margin-top: 3.2rem;
+        text-transform: uppercase;
+        font-size: 1.3rem;
+        font-weight: 700;
+        line-height: 2.5rem;
+        letter-spacing: 0.093rem;
+        color: #000;
+        margin-bottom: 1.6rem;
+        @media (min-width: 768px) {
+          margin-top: 4.1rem;
+        }
+      }
       &__item {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         margin-top: 2.4rem;
-
         &:first-child {
           margin-top: 0;
         }
-
         @media (min-width: 768px) {
           margin: 0;
           margin-bottom: 2.4rem;
           margin-right: 1.6rem;
-
           &:last-child {
             margin-bottom: 0;
           }
         }
-
         .input-texts {
           display: flex;
           align-items: center;
           width: 28rem;
           justify-content: space-between;
           margin-bottom: 0.9rem;
-
           @media (min-width: 768px) {
             width: 30.9rem;
           }
-
           .red-label {
             color: rgba(205, 44, 44, 1) !important;
           }
-
           .empty-message {
             text-align: right;
             font-weight: 500;
@@ -255,7 +273,6 @@ export default {
             color: rgba(205, 44, 44, 1);
           }
         }
-
         label,
         .label {
           font-weight: 700;
@@ -264,7 +281,6 @@ export default {
           letter-spacing: -0.021rem;
           text-transform: capitalize;
         }
-
         input {
           width: 28rem;
           height: 5.6rem;
@@ -278,30 +294,29 @@ export default {
           border: 0.1rem solid #d5d5d5;
           caret-color: #dd8d61;
           transition: all 0.3s ease;
-
           &:hover {
             border-color: #dd8d61;
           }
-
           @media (min-width: 768px) {
             width: 30.9rem;
           }
-
           &:focus {
             outline: none;
             border-color: #dd8d61;
           }
         }
-
         .orange-border {
           border-color: rgba(216, 125, 74, 1) !important;
         }
-
         .no-capitalize {
           text-transform: none;
         }
-      } 
+      }
     }
   }
+}
+a:visited {
+text-decoration: none;
+color: #dd8d61;
 }
 </style>
