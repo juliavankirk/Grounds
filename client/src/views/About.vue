@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import Header from '../components/CatalogPage/Header.vue';
+import Header from '../components/ProductsPage/Header.vue';
 
 
 export default {
