@@ -20,6 +20,7 @@ export default {
   name: 'ProductCard',
   props: {
     product: Object
-  }
+  },
+  mounted() {}
 }
 </script>

@@ -3,7 +3,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Product from './views/Product.vue'
-import Catalog from './views/Catalog.vue'
+import Products from './views/Products.vue'
 import About from './views/About.vue'
 import Success from './views/Success.vue'
 import Login from './views/Login.vue'
@@ -22,9 +22,9 @@ export default new Router({
       component: Home
     },
     {
-      path: '/catalog',
-      name: 'catalog',
-      component: Catalog
+      path: '/products',
+      name: 'products',
+      component: Products
     },
     {
       path: '/about',
@@ -32,7 +32,7 @@ export default new Router({
       component: About
     },
     {
-      path: '/products/:id',
+      path: '/product/:id',
       name: 'product',
       component: Product
     },

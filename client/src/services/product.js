@@ -1,14 +1,14 @@
-import Api from '@/services/Api'
+import { Api } from '@/services/Api.js'
 
 export const productApi = {
   getProducts: () => 
-    Api.get('/products/'),
+    Api.get('/products'),
   getProduct: productId => 
-    Api.get(`/product/find/${productId}`),
+    Api.get(`/products/find/${productId}`),
   createProduct: (productId, data) => 
     Api.post('/products/', productId, data),
   updateProduct: (productId, data) => 
     Api.put(`products/${productId}`, data),
   deleteProduct: (productId) => 
-    Api.delete(`/products/${productId}`)
+    Api.delete(`/product/${productId}`)
 }
