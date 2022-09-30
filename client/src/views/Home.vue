@@ -1,40 +1,45 @@
 <template>
   <div>
-    <b-jumbotron header="DIT342 Frontend" lead="Welcome to your DIT342 Frontend Vue.js App">
-      <b-button class="btn_message" variant="primary" v-on:click="getMessage()" >Get Message from Server</b-button>
-      <p>Message from the server:<br/>
-      {{ message }}</p>
-    </b-jumbotron>
-  </div>
+    <Header @toggle-menu-show="$emit('toggle-menu-show', $event)" />
+    <main>
+    <section class="categories">
+      <Category product="coffee" />
+      <Category product="brewers" />
+      <Category product="mugs" />
+    </section>
+    <AboutSection />
+    </main>
+    </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import { Api } from '@/Api'
+import Header from "../components/HomePage/Header.vue";
+import Category from "../components/HomePage/Category.vue"
+import AboutSection from "../components/HomePage/AboutSection.vue";
 
 export default {
-  name: 'home',
-  data() {
-    return {
-      message: 'none'
-    }
+  name: "Home",
+  components: {
+    Header,
+    Category,
+    AboutSection,
   },
-  methods: {
-    getMessage() {
-      Api.get('/')
-        .then(response => {
-          this.message = response.data.message
-        })
-        .catch(error => {
-          this.message = error
-        })
-    }
-  }
-}
+  emits: ["toggle-menu-show"],
+};
 </script>
 
-<style>
-.btn_message {
-  margin-bottom: 1em;
+<style lang="scss" scoped>
+.categories {
+  padding: 9.2rem 2.4rem 0 2.4rem;
+
+  @media (min-width: 768px) {
+    display: flex;
+    justify-content: center;
+    padding: 9.6rem 4rem 0 4rem;
+  }
+
+  @media (min-width: 1205px) {
+    padding: 12rem 16.5rem 0 16.5rem;
+  }
 }
 </style>
