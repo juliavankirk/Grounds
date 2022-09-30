@@ -107,7 +107,7 @@ export default {
     }
   }
 
-  &__desktop-menu, &__desktop-acct {
+  &__desktop-menu {
     margin-left: 33.2rem;
     display: none;
 

@@ -3,26 +3,27 @@
     <Header 
       :title="title"
       @toggle-menu-show="$emit('toggle-menu-show', $event)" />
-    <b-card-group deck>
-      <router-link to="#">
-        <b-card
-          v-for="(product, index) in allProducts"
-          :key="index"
-        >
+        <b-col class="col-xl-6">
+          <b-card class="my-cards"
+            v-for="(product, index) in allProducts"
+            :key="index"
+          >
+          <router-link to="#">
           <b-card-img 
+            :src="product.img"
+            :alt="product.title"
             top
-
           >
           </b-card-img>
-          <b-card-title>
+          <b-card-title class="title">
             {{product.title}}
           </b-card-title>
-          <b-card-text >
-            {{product.price}}
+          <b-card-text class="price">
+            {{product.price}},00 kr
           </b-card-text>
-        </b-card>
-      </router-link>
-    </b-card-group>  
+          </router-link>
+          </b-card>
+        </b-col>
   </div>
 </template>
 <script>
@@ -57,6 +58,9 @@ export default {
           console.log(err)
         });
   },
+  getImage(img) {
+    return img ? require(`${img}`) : ''
+  }
     
   },
   created() {
@@ -69,6 +73,53 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped>
+<style lang="scss" scoped>
+.col-xl-6 {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  @media (min-width: 768px) {
+    
+    padding: 2rem 2rem;
+  }
+  .my-cards {
+    margin: 1rem;
+    width: 90%;
+
+    @media (min-width: 768px) {
+      width: 40%;
+      margin: 2rem;
+      align-items: center;
+
+    }
+    @media (min-width: 1205px) {
+      width: 27%;
+      margin: 2rem;
+    }
+  }
+}
+.title {
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 3.825rem;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+  color: rgba(216, 125, 74, 1);
+
+  @media (min-width: 768px) {
+    font-size: 1.8rem;
+    line-height: 3.3rem;
+    letter-spacing: 0.114rem;
+  }
+}
+.price {
+  color: #7d7d7d;
+  font-size: 1.2rem;
+
+  @media (min-width: 768px) {
+    font-size: 1.3rem;
+  }
+}
 
 </style>
