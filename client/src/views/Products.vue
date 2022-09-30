@@ -6,12 +6,13 @@
     <b-card-group deck>
       <router-link to="#">
         <b-card
-          :class="{ active: index === currentIndex }"
           v-for="(product, index) in allProducts"
           :key="index"
         >
-          <b-card-img top>
-            {{product.img}}
+          <b-card-img 
+            top
+
+          >
           </b-card-img>
           <b-card-title>
             {{product.title}}
@@ -50,7 +51,7 @@ export default {
         .getProducts()
         .then(res => {
           this.allProducts = res.data
-          console.log(response.data)
+          console.log(res.data)
       })
         .catch(err => {
           console.log(err)
