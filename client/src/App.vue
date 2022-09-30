@@ -6,6 +6,12 @@
     @toggle-menu-show="toggleMenu"
     ref="mobileMenu"
   />
+  <User
+    :show="showUser"
+    :scrollTop="scrollTop"
+    @toggle-menu-show="toggleMenu"
+    ref="mobileUser"
+  />
   
   <Cart
     :show="showCart"
@@ -33,17 +39,28 @@
 </template>
 
 <script>
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 import Footer from "./components/Footer.vue";
 import Menu from "./components/Menu.vue";
+import User from "./components/User.vue"
 import Cart from "./components/Cart.vue";
 import data from "./data.json";
 
 export default {
   name: "App",
-  components: { Footer, Menu, Cart },
+  components: { Footer, Menu, User, Cart },
+
+  computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    }
+  },
+
   data() {
     return {
       showMenu: false,
+      showUser: false,
       showCart: false,
       showConfirmation: false,
       scrollTop: false,
@@ -51,13 +68,20 @@ export default {
       products: data,
     };
   },
+
   methods: {
+    logOut() {
+      this.$store.dispatch('auth/logout');
+      this.$router.push('/login');
+    },
     toggleMenu(myVar) {
       if (myVar === "logo") {
         this.showMenu = false;
         this.showCart = false;
       } else if (myVar === "menu") {
         this.showMenu = !this.showMenu;
+      } else if (myVar === "user") {
+        this.showUser = !this.showUser;
       } else if (myVar === "cart") {
         this.showCart = !this.showCart;
       } else if (myVar === "confirmation") {

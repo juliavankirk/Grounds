@@ -1,23 +1,17 @@
 <template>
 <div>
   <div :class="['overlay', show ? 'showElement' : 'hideElement']"></div>
-  <div :class="['menu', show ? 'showElement' : 'hideElement']" ref="mobileMenu">
-    <section class="navbar" v-if="!currentUser">
+  <div :class="['user', show ? 'showElement' : 'hideElement']" ref="mobileUser">
+    <section v-if="!currentUser" class="navbar">
       <b-navbar-nav>
-        <b-nav-item href="/">Home</b-nav-item>
-        <b-nav-item href="/catalog">Products</b-nav-item>
-        <b-nav-item href="/about">About</b-nav-item>
-        <b-nav-item class="invis" href="/login">Sign in</b-nav-item>
-        <b-nav-item class="invis" href="/register">Register</b-nav-item>
+        <b-nav-item href="/login">Sign in</b-nav-item>
+        <b-nav-item href="/register">Register</b-nav-item>
       </b-navbar-nav>
     </section>
-    <section class="navbar" v-if="currentUser">
+    <section v-if="currentUser" class="navbar">
       <b-navbar-nav>
-        <b-nav-item href="/">Home</b-nav-item>
-        <b-nav-item href="/products">Products</b-nav-item>
-        <b-nav-item href="/about">About</b-nav-item>
-        <b-nav-item class="invis" href="/profile">Profile</b-nav-item>
-        <b-nav-item class="invis" @click.prevent="logOut">Logout</b-nav-item>
+        <b-nav-item href="/profile">Profile</b-nav-item>
+        <b-nav-item href @click.prevent="logOut">Sign out</b-nav-item>
       </b-navbar-nav>
     </section>
   </div>
@@ -27,7 +21,7 @@
 <script>
 
 export default {
-  name: "Menu",
+  name: "User",
   computed: {
     currentUser(){
       return this.$store.state.auth.user;
@@ -43,7 +37,7 @@ export default {
   emits: ["toggle-menu-show"],
   watch: {
     scrollTop() {
-      this.$refs.mobileMenu.scrollTo(0, 0);
+      this.$refs.mobileUser.scrollTo(0, 0);
     },
   },
 };
@@ -64,7 +58,7 @@ export default {
   }
 }
 
-.menu {
+.user {
   position: absolute;
   background: white;
   width: 100%;
@@ -81,17 +75,6 @@ export default {
   @media (min-width: 768px) {
     max-height: auto;
     padding: 10.8rem 0 6.7rem 0;
-  }
-
-  @media (min-width: 1205px) {
-    display: none !important;
-  }
-}
-
-.invis {
-
-  @media (min-width: 768px) {
-    visibility: hidden;
   }
 }
 

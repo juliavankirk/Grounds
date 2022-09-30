@@ -17,21 +17,14 @@
     <ul class="navbar__desktop-menu">
       <li class="navbar__desktop-menu__link">
         <router-link to="/">Home</router-link>
-        <router-link to="/catalog">Shop</router-link>
+        <router-link to="/products">Products</router-link>
         <router-link to="/about">About</router-link>
       </li>
     </ul>
-    <router-link
-      class="navbar__user-btn"
+    <button
+      class="navbar__mobile-acct-btn"
       @click="$emit('toggle-menu-show', 'user')"
-      to="/login"
-    >
-      <img
-        src="../assets/svg/icon-user.svg"
-        alt="Account"
-        class="navbar__user-btn__icon"
-      />
-    </router-link>
+    ></button>
     <button
       class="navbar__cart-btn"
       @click="$emit('toggle-menu-show', 'cart')"
@@ -87,9 +80,23 @@ export default {
     }
   }
 
+  &__mobile-acct-btn {
+    background: url("../assets/svg/icon-user.svg");
+    width: 2.3rem;
+    height: 2rem;
+    right: 0;
+    visibility: hidden;
+
+    @media (min-width: 768px) {
+      position: absolute;
+      right: 5rem;
+      visibility: visible;
+    }
+  }
+
   &__homeLink {
     display: flex;
-    margin-left: 8.5rem;
+    margin-left: 6.5rem;
 
     @media (min-width: 768px) {
       margin-left: 4.2rem;
@@ -100,7 +107,7 @@ export default {
     }
   }
 
-  &__desktop-menu {
+  &__desktop-menu, &__desktop-acct {
     margin-left: 33.2rem;
     display: none;
 
