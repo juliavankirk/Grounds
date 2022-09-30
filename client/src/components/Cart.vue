@@ -10,22 +10,22 @@
       </button>
     </div>
     <div class="products">
-      <div class="products__item" v-for="product in cart" :key="product.id">
+      <div class="products__item" v-for="product in cart" :key="product._id">
         <div class="left">
-          <img :src="editSrc(product)" :alt="product.name" />
+          <img :src="product.img" :alt="product.title" />
           <div class="products__item__info">
             <h4>
-              {{ product.slug.slice(0, product.slug.indexOf("-")) }}
+              {{ product }}
             </h4>
-            <p>$ {{ separator(product.price) }}</p>
+            <p>{{ separator(product.price) }},00 kr.</p>
           </div>
         </div>
         <div class="products__item__quantity">
-          <button class="less" @click="changeQuantity('subtract', product.id)">
+          <button class="less" @click="changeQuantity('subtract', product._id)">
             -
           </button>
           <p class="value">{{ product.addedQuantity }}</p>
-          <button class="more" @click="changeQuantity('add', product.id)">
+          <button class="more" @click="changeQuantity('add', product._id)">
             +
           </button>
         </div>
@@ -33,7 +33,7 @@
     </div>
     <div class="cart__total">
       <h4>Total</h4>
-      <p>${{ separator(total) }}</p>
+      <p>{{ separator(total) }},00 kr.</p>
     </div>
     <router-link
       class="cart__router-link"
@@ -54,7 +54,7 @@ export default {
   props: { show: Boolean, cart: Array },
   methods: {
     editSrc(product) {
-      return require(`../${product.image.mobile.slice(2)}`);
+      return require(`${product.img}`);
     },
     separator(numb) {
       var str = numb.toString().split(".");

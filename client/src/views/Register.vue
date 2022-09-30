@@ -302,6 +302,7 @@ input::-webkit-inner-spin-button {
       .no-margin {
         @media (min-width: 768px) {
           margin-right: 0 !important;
+          margin-left: 0.8rem;
         }
       }
 

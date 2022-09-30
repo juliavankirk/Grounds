@@ -10,24 +10,24 @@
           <div class="login__form__input__item no-margin full-span">
             <div class="input-texts">
               <label
-                for="username"
-                :class="emptyFields.includes('username') ? 'red-label' : ''"
-                >Username</label
+                for="email"
+                :class="emptyFields.includes('email') ? 'red-label' : ''"
+                >Email</label
               >
-              <p class="empty-message" v-if="emptyFields.includes('username')">
-                Username is required!
+              <p class="empty-message" v-if="emptyFields.includes('email')">
+                Email is required!
               </p>
             </div>
             <input
-              v-model="user.username"
+              v-model="user.email"
               v-validate="'required'"
               type="text"
-              name="username"
-              id="username"
-              ref="username"
-              :class="emptyFields.includes('username') ? 'empty-border' : ''"
-              @click="wipeError('username')"
-              @change="wipeError('username')"
+              name="email"
+              id="email"
+              ref="email"
+              :class="emptyFields.includes('email') ? 'empty-border' : ''"
+              @click="wipeError('email')"
+              @change="wipeError('email')"
               spellcheck="false"
             />
           </div>
@@ -102,7 +102,7 @@ export default {
   },
   mounted() {
     if (this.loggedIn) {
-      this.$router.push('/');
+      this.$router.push('/profile');
     }
   },
   methods: {
@@ -132,7 +132,7 @@ export default {
 
 
       const myRefs = [
-        this.$refs.username,
+        this.$refs.email,
         this.$refs.password
       ];
       myRefs.map((ref) => {

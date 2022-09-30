@@ -8,7 +8,7 @@
             v-for="(product, index) in allProducts"
             :key="index"
           >
-          <router-link to="#">
+          <router-link :to="`/product/${product._id}`">
           <b-card-img 
             :src="product.img"
             :alt="product.title"
@@ -52,10 +52,10 @@ export default {
         .getProducts()
         .then(res => {
           this.allProducts = res.data
-          console.log(res.data)
+          console.log(res.data);
       })
         .catch(err => {
-          console.log(err)
+          console.log(err);
         });
   },
   getImage(img) {
@@ -80,7 +80,6 @@ export default {
   flex-wrap: wrap;
   justify-content: space-evenly;
   @media (min-width: 768px) {
-    
     padding: 2rem 2rem;
   }
   .my-cards {

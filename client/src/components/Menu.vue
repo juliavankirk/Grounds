@@ -5,7 +5,7 @@
     <section class="navbar" v-if="!currentUser">
       <b-navbar-nav>
         <b-nav-item href="/">Home</b-nav-item>
-        <b-nav-item href="/catalog">Products</b-nav-item>
+        <b-nav-item href="/products">Products</b-nav-item>
         <b-nav-item href="/about">About</b-nav-item>
         <b-nav-item class="invis" href="/login">Sign in</b-nav-item>
         <b-nav-item class="invis" href="/register">Register</b-nav-item>
@@ -69,7 +69,7 @@ export default {
   background: white;
   width: 100%;
   top: 9.1rem;
-  padding: 8.4rem 0 3.5rem 0;
+  padding: 3rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -80,7 +80,7 @@ export default {
 
   @media (min-width: 768px) {
     max-height: auto;
-    padding: 10.8rem 0 6.7rem 0;
+    padding: 5rem;
   }
 
   @media (min-width: 1205px) {
@@ -96,7 +96,14 @@ export default {
 }
 
 .navbar {
+  font-weight: 700;
+  font-size: 1.2rem;
+  line-height: 3.825rem;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+
   @media (min-width: 768px) {
+    font-size: 1.7rem;
     display: flex;
     align-items: center;
   }

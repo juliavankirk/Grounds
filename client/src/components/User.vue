@@ -79,7 +79,14 @@ export default {
 }
 
 .navbar {
+  font-weight: 700;
+  font-size: 1.2rem;
+  line-height: 3.825rem;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+  
   @media (min-width: 768px) {
+    font-size: 1.7rem;
     display: flex;
     align-items: center;
   }

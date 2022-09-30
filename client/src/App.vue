@@ -65,7 +65,7 @@ export default {
       showConfirmation: false,
       scrollTop: false,
       cart: [],
-      products: data,
+      products: []
     };
   },
 
