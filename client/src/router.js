@@ -55,7 +55,7 @@ export default new Router({
       component: Register,
     },
     {
-      path: '/profile',
+      path: '/profile/:id',
       name: 'profile',
       component: Profile,
     }

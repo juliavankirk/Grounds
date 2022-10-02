@@ -16,7 +16,7 @@
         <b-nav-item href="/">Home</b-nav-item>
         <b-nav-item href="/products">Products</b-nav-item>
         <b-nav-item href="/about">About</b-nav-item>
-        <b-nav-item class="invis" href="/profile">Profile</b-nav-item>
+        <b-nav-item class="invis" :to="`/profile/${currentUser._id}`">Profile</b-nav-item>
         <b-nav-item class="invis" @click.prevent="logOut">Logout</b-nav-item>
       </b-navbar-nav>
     </section>

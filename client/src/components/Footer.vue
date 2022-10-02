@@ -13,7 +13,7 @@
             <router-link @click="scrollToTop" to="/">Home</router-link>
           </li>
           <li class="footer__content__first-line__link-list__link">
-            <router-link @click="scrollToTop" to="/catalog"
+            <router-link @click="scrollToTop" to="/products"
               >Shop</router-link
             >
           </li>

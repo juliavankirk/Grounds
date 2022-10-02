@@ -151,7 +151,9 @@
         v-if="message"
         class="alert"
         :class="successful ? 'alert-success' : 'alert-danger'"
-      >{{message}}</div>
+      >
+        {{message}}
+      </div>
   </main>
 </div>
 </template>

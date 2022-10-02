@@ -10,7 +10,7 @@
     </section>
     <section v-if="currentUser" class="navbar">
       <b-navbar-nav>
-        <b-nav-item href="/profile">Profile</b-nav-item>
+        <b-nav-item :to="`/profile/${currentUser._id}`">Profile</b-nav-item>
         <b-nav-item href @click.prevent="logOut">Sign out</b-nav-item>
       </b-navbar-nav>
     </section>

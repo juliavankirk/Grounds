@@ -1,3 +1,4 @@
+const CryptoJS = require("crypto-js"); 
 const User = require("../models/UserModel");
 const {
   verifyToken,
@@ -14,6 +15,8 @@ router.put("/:id", verifyTokenAndAuthorization, async (req, res) => { // Middlew
       req.body.password,
       process.env.PASS_SEC
     ).toString();
+  } else {
+    return res.status(401).json({ message: 'Wrong password' })
   }
 
   try {
@@ -24,9 +27,10 @@ router.put("/:id", verifyTokenAndAuthorization, async (req, res) => { // Middlew
       },
       { new: true }
     );
-    res.status(200).json(updatedUser);
+    return res.status(200).json(updatedUser);
   } catch (err) {
-    res.status(500).json(err);
+    console.log('Promise rejected')
+    return res.status(500).json(err);
   }
 });
 
