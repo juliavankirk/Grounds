@@ -138,6 +138,13 @@
         />
       </div>
     </form>
+    <button
+      type="submit"
+      class="btn__delete default-btn"
+      @click="clickDeleteUser"
+    >
+      Delete
+    </button>
     <div
         v-if="message"
         class="alert"
@@ -178,6 +185,20 @@ export default {
 
     getUser() {
       console.log(this.user);
+    },
+    clickDeleteUser() {
+      const id = this.$store.state.auth.user._id
+      if (id) {
+        userApi.deleteUser(id)
+        .then(res => {
+          this.message = res.message
+          console.log(res.data);
+          this.$store.dispatch('auth/logout').then(() => {
+            this.$router.push('/login')
+          })
+        })
+        .catch(err => console.log(err));
+      }
     },
 
     submitHandler() {
@@ -457,6 +478,15 @@ input::-webkit-inner-spin-button {
 }
 .btn {
   margin-top: 3rem;
+  display: flex;
+
+  &__delete {
+    margin: 2rem auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ce382c;
+  }
 }
 
 a:visited {

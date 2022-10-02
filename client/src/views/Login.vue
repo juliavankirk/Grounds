@@ -96,13 +96,16 @@ export default {
     message: ''
     }),
   computed: {
+    currentUser(){
+      return this.$store.state.auth.user;
+    },
     loggedIn() {
       return this.$store.state.auth.status.loggedIn;
     }
   },
   mounted() {
     if (this.loggedIn) {
-      this.$router.push('/profile');
+      this.$router.push("/");
     }
   },
   methods: {
@@ -116,6 +119,7 @@ export default {
         if (isValid) {
           this.$store.dispatch('auth/login', this.user).then(
             data => {
+              this.$router.push('/');
               this.message = data.message;
               this.successful = true;
             },
