@@ -14,13 +14,26 @@
         alt="grounds logo"
         class="navbar__homeLink__logo"
     /></router-link>
-    <ul class="navbar__desktop-menu">
+    <section v-if="!currentAdmin">
+      <ul class="navbar__desktop-menu">
       <li class="navbar__desktop-menu__link">
         <router-link to="/">Home</router-link>
         <router-link to="/products">Products</router-link>
         <router-link to="/about">About</router-link>
       </li>
     </ul>
+    </section>
+
+    <section v-if="currentAdmin.isAdmin === true">
+      <ul class="navbar__desktop-menu">
+      <li class="navbar__desktop-menu__link">
+        <router-link to="/">Home</router-link>
+        <router-link to="/products">Products</router-link>
+        <router-link to="/orders">Orders</router-link>
+      </li>
+    </ul>
+    </section>
+    
     <button
       class="navbar__mobile-acct-btn"
       @click="$emit('toggle-menu-show', 'user')"
@@ -37,6 +50,11 @@
 <script>
 export default {
   name: "Navbar",
+  computed: {
+    currentAdmin() {
+      return this.$store.state.auth.user;
+    }
+  },
   data() {
     return { myVar: "hello" };
   },

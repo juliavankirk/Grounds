@@ -45,6 +45,7 @@ import Footer from "./components/Footer.vue";
 import Menu from "./components/Menu.vue";
 import User from "./components/User.vue"
 import Cart from "./components/Cart.vue";
+import { productApi } from "@/services/product.js"
 import data from "./data.json";
 
 export default {
@@ -65,7 +66,7 @@ export default {
       showConfirmation: false,
       scrollTop: false,
       cart: [],
-      products: []
+      allProducts: []
     };
   },
 
@@ -74,6 +75,17 @@ export default {
       this.$store.dispatch('auth/logout');
       this.$router.push('/login');
     },
+    retrieveProducts() {
+      productApi
+        .getProducts()
+        .then(res => {
+          this.allProducts = res.data
+          console.log(res.data);
+      })
+        .catch(err => {
+          console.log(err);
+        });
+  },
     toggleMenu(myVar) {
       if (myVar === "logo") {
         this.showMenu = false;
@@ -93,7 +105,7 @@ export default {
       localStorage.setItem("cart", JSON.stringify(this.cart));
     },
     addToCart(data) {
-      let product = this.products.find(
+      let product = this.allProducts.find(
         (product) => product.id === data.productId
       );
       if (this.cart.find((prod) => prod.id === product.id)) {

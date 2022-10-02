@@ -1,10 +1,17 @@
-import { createStore } from 'vuex'
 
-export default createStore({
+
+const cart = JSON.parse(localStorage.getItem('cart'));
+
+const initialState = cart
+  ? { status: { loggedIn: true }, cart }
+  : { status: { loggedIn: false }, cart: null };
+
+export const basket = {
   state: {
     cart: {
       items: []
     },
+    state: initialState,
     isAuthenticated: false,
     token: '',
     isLoading: false
@@ -61,4 +68,4 @@ export default createStore({
   },
   modules: {
   }
-})
+}

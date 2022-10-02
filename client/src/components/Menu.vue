@@ -11,11 +11,20 @@
         <b-nav-item class="invis" href="/register">Register</b-nav-item>
       </b-navbar-nav>
     </section>
-    <section class="navbar" v-if="currentUser">
+    <section class="navbar" v-if="currentUser.isAdmin === false">
       <b-navbar-nav>
         <b-nav-item href="/">Home</b-nav-item>
         <b-nav-item href="/products">Products</b-nav-item>
         <b-nav-item href="/about">About</b-nav-item>
+        <b-nav-item class="invis" :to="`/profile/${currentUser._id}`">Profile</b-nav-item>
+        <b-nav-item class="invis" @click.prevent="logOut">Logout</b-nav-item>
+      </b-navbar-nav>
+    </section>
+    <section class="navbar" v-if="currentUser.isAdmin === true">
+      <b-navbar-nav>
+        <b-nav-item href="/">Home</b-nav-item>
+        <b-nav-item href="/products">Products</b-nav-item>
+        <b-nav-item href="/orders">Orders</b-nav-item>
         <b-nav-item class="invis" :to="`/profile/${currentUser._id}`">Profile</b-nav-item>
         <b-nav-item class="invis" @click.prevent="logOut">Logout</b-nav-item>
       </b-navbar-nav>
@@ -32,6 +41,11 @@ export default {
     currentUser(){
       return this.$store.state.auth.user;
     },
+    currentAdmin() {
+      {
+        return this.$store.state.auth.user.isAdmin
+      }
+    }
   },
   methods: {
     logOut() {

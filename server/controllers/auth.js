@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken"); // Library that generates token for each us
 router.post("/register", async (req, res) => {
   const candidate = await User.findOne({ email: req.body.email });
   if (candidate) {
-    res.status(409).json({ message: 'The email has been already registered' })
+    return res.status(409).json({ message: 'The email has been already registered' })
   } else {
     // Save newUser to db as a promise
     const newUser = new User({
@@ -27,10 +27,10 @@ router.post("/register", async (req, res) => {
       // Waits for newUser promise before logging
       const savedUser = await newUser.save()
       // Save to client side / 201 means successfully edited
-      res.status(201).json(savedUser);
+      return res.status(201).json(savedUser);
     } catch (err) {
-      console.log('Promise rejection handling')
-      res.status(500).json({ message: 'Internal server error' });
+      console.log(err)
+      return res.status(500).json({ message: 'Internal server error' });
     }
   }
 })

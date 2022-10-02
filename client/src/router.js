@@ -5,6 +5,7 @@ import Home from './views/Home.vue'
 import Product from './views/Product.vue'
 import Products from './views/Products.vue'
 import About from './views/About.vue'
+import Orders from './views/Orders.vue'
 import Success from './views/Success.vue'
 import Login from './views/Login.vue'
 import Register from './views/Register.vue'
@@ -30,6 +31,11 @@ export default new Router({
       path: '/about',
       name: 'about',
       component: About
+    },
+    {
+      path: '/orders',
+      name: 'orders',
+      component: Orders
     },
     {
       path: '/product/:id',

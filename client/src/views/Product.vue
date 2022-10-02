@@ -63,7 +63,6 @@
 <script>
 import Header from "../components/ProductPage/Header.vue";
 import { productApi } from "@/services/product.js"
-import data from "../data.json";
 
 export default {
   name: "ProductPage",
@@ -72,7 +71,6 @@ export default {
   data() {
     return {
       total: 1,
-      product: [],
       currentProduct: [],
       windowSize: null,
       justAdded: false,
@@ -99,14 +97,13 @@ export default {
       }
     },
     addToCartHandler() {
-      
-
       this.justAdded = true;
       const data = {
         productId: this.currentProduct._id,
         addedQuantity: this.total,
       };
       this.$emit("add-to-cart", data);
+      
     },
     resetTotal() {
       this.total = 1;
