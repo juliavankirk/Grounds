@@ -23,7 +23,7 @@
     <section class="navbar" v-if="currentUser.isAdmin === true">
       <b-navbar-nav>
         <b-nav-item href="/">Home</b-nav-item>
-        <b-nav-item href="/products">Products</b-nav-item>
+        <b-nav-item href="/catalog">Catalog</b-nav-item>
         <b-nav-item href="/orders">Orders</b-nav-item>
         <b-nav-item class="invis" :to="`/profile/${currentUser._id}`">Profile</b-nav-item>
         <b-nav-item class="invis" @click.prevent="logOut">Logout</b-nav-item>
@@ -40,11 +40,6 @@ export default {
   computed: {
     currentUser(){
       return this.$store.state.auth.user;
-    },
-    currentAdmin() {
-      {
-        return this.$store.state.auth.user.isAdmin
-      }
     }
   },
   methods: {

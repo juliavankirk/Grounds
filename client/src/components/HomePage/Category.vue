@@ -24,7 +24,7 @@
     <h2 class="category__name">{{ product }}</h2>
     <router-link
       class="category__link"
-      :to="{ name: 'CategoryPage', params: { category: `${product}` } }"
+      :to="{ name: 'Products', params: { category: `${product}` } }"
       @click="scrollToTop"
     >
       Shop

@@ -66,6 +66,7 @@ export default {
       showConfirmation: false,
       scrollTop: false,
       cart: [],
+      product: [],
       allProducts: []
     };
   },
@@ -86,6 +87,7 @@ export default {
           console.log(err);
         });
   },
+
     toggleMenu(myVar) {
       if (myVar === "logo") {
         this.showMenu = false;
@@ -104,29 +106,44 @@ export default {
     storeCart() {
       localStorage.setItem("cart", JSON.stringify(this.cart));
     },
+
     addToCart(data) {
-      let product = this.allProducts.find(
-        (product) => product.id === data.productId
-      );
-      if (this.cart.find((prod) => prod.id === product.id)) {
-        const index = this.cart.findIndex((prod) => prod.id === product.id);
-        this.cart[index] = {
-          ...this.cart[index],
-          addedQuantity: this.cart[index].addedQuantity + data.addedQuantity,
-        };
+      console.log(data);
+      let prodId = data.productId._id;
+      // check if item exists in cart exists in db
+      let exists = this.cart.find((product) => product.productId._id === prodId);
+      if (exists) {
+        exists.addedQuantity += data.addedQuantity;
+        
+        console.log("I am adding more");
+        console.log(exists.data);
+        console.log(exists);
       } else {
-        product = { ...product, addedQuantity: data.addedQuantity };
-        this.cart.push(product);
+        // otherwise add more to cart
+        exists = { ...data, addedQuantity: data.addedQuantity };
+        this.cart.push(exists);
+        console.log("I am adding one");
+        console.log(exists);
+        console.log(data.productId._id);
       }
+      // store data to cart
       this.storeCart();
     },
+
+
+
+
+
+
+
+
     changeQuantity(data) {
-      const index = this.cart.findIndex((prod) => prod.id === data.productId);
+      const index = this.cart.findIndex((prod) => prod.id === data.productId._id);
       if (data.operation === "subtract") {
         if (this.cart[index].addedQuantity === 1) {
           this.cart = this.cart
             .slice()
-            .filter((prod) => prod.id !== data.productId);
+            .filter((prod) => prod.id !== data.productId._id);
         } else {
           this.cart[index] = {
             ...this.cart[index],
@@ -150,9 +167,11 @@ export default {
     if (localStorage.getItem("cart") === null) {
       localStorage.setItem("cart", JSON.stringify(this.cart));
     }
+    this.retrieveProducts();
   },
   mounted() {
     this.cart = JSON.parse(localStorage.getItem("cart"));
+    this.retrieveProducts();
   },
 };
 </script>

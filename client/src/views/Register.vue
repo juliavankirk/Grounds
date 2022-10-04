@@ -195,9 +195,9 @@ export default {
         if (isValid) {
           this.$store.dispatch('auth/register', this.user).then(
             data => {
-              this.$router.push('/login')
               this.message = data.message;
               this.successful = true;
+              this.$router.push('/login')
             },
             error => {
               this.message =

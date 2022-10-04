@@ -28,7 +28,7 @@
       <ul class="navbar__desktop-menu">
       <li class="navbar__desktop-menu__link">
         <router-link to="/">Home</router-link>
-        <router-link to="/products">Products</router-link>
+        <router-link to="/catalog">Catalog</router-link>
         <router-link to="/orders">Orders</router-link>
       </li>
     </ul>

@@ -10,22 +10,22 @@
       </button>
     </div>
     <div class="products">
-      <div class="products__item" v-for="product in cart" :key="product._id">
+      <div class="products__item" v-for="product in cart" :key="product.id">
         <div class="left">
-          <img :src="product.img" :alt="product.title" />
+          <img :src="product.productId.img" :alt="product.title" />
           <div class="products__item__info">
             <h4>
-              {{ product }}
+              {{ product.productId.title }}
             </h4>
-            <p>{{ separator(product.price) }},00 kr.</p>
+            <p>{{ (product.productId.price) }},00 kr.</p>
           </div>
         </div>
         <div class="products__item__quantity">
-          <button class="less" @click="changeQuantity('subtract', product._id)">
+          <button class="less" @click="changeQuantity('subtract', product.productId._id)">
             -
           </button>
           <p class="value">{{ product.addedQuantity }}</p>
-          <button class="more" @click="changeQuantity('add', product._id)">
+          <button class="more" @click="changeQuantity('add', product.productId._id)">
             +
           </button>
         </div>
@@ -33,7 +33,7 @@
     </div>
     <div class="cart__total">
       <h4>Total</h4>
-      <p>{{ separator(total) }},00 kr.</p>
+      <p>{{ (total) }},00 kr.</p>
     </div>
     <router-link
       class="cart__router-link"
@@ -65,18 +65,23 @@ export default {
       const data = {
         productId: id,
         operation: operation,
+        
       };
       this.$emit("change-quantity", data);
+      console.log(data);
+      console.log(operation);
     },
   },
   computed: {
     total() {
       let totalValue = 0;
       this.cart.forEach(
-        (product) => (totalValue += product.price * product.addedQuantity)
+        (product) => (totalValue += product.productId.price * product.addedQuantity)
       );
       return totalValue;
+      
     },
+    
   },
 };
 </script>

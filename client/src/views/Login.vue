@@ -177,29 +177,6 @@ input::-webkit-inner-spin-button {
   -moz-appearance: textfield;
   margin: 0;
 }
-.back-link {
-  font-size: 1.5rem;
-  line-height: 2.5rem;
-  font-weight: 500;
-  color: #7d7d7d;
-  margin: 1.6rem auto 2.4rem auto;
-  display: block;
-  cursor: pointer;
-  width: 32.7rem;
-  transition: all 0.3s ease;
-  &:hover {
-    color: rgba(216, 125, 74, 1);
-  }
-  @media (min-width: 768px) {
-    width: 68.9rem;
-    margin-top: 3.3rem;
-  }
-  @media (min-width: 1205px) {
-    margin-top: 7.9rem;
-    width: 111rem;
-    padding-left: 1rem;
-  }
-}
 .empty-border {
   border: 0.2rem solid #ce382c !important;
 }

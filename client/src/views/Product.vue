@@ -39,7 +39,7 @@
               'default-btn',
               justAdded ? 'just-added' : '',
             ]"
-            @click="addToCartHandler"
+            @click="addToCartHandler(currentProduct)"
           >
             {{ justAdded ? "Added to cart" : "Add to cart" }}
           </button>
@@ -63,6 +63,7 @@
 <script>
 import Header from "../components/ProductPage/Header.vue";
 import { productApi } from "@/services/product.js"
+import data from "../data.json";
 
 export default {
   name: "ProductPage",
@@ -71,6 +72,7 @@ export default {
   data() {
     return {
       total: 1,
+      product: [],
       currentProduct: [],
       windowSize: null,
       justAdded: false,
@@ -96,15 +98,19 @@ export default {
         this.total--;
       }
     },
-    addToCartHandler() {
+    addToCartHandler(currentItem) {
       this.justAdded = true;
       const data = {
-        productId: this.currentProduct._id,
+        productId: currentItem,
         addedQuantity: this.total,
       };
       this.$emit("add-to-cart", data);
+    },
+
+    addToC() {
       
     },
+
     resetTotal() {
       this.total = 1;
       this.justAdded = false;
@@ -133,6 +139,9 @@ export default {
     editSrc() {
         return require(`${this.currentProduct.img}`);
     },
+    currentAdmin() {
+      return this.$store.state.auth.user;
+    }
   },
 };
 </script>
