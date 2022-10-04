@@ -46,7 +46,7 @@ import Menu from "./components/Menu.vue";
 import User from "./components/User.vue"
 import Cart from "./components/Cart.vue";
 import { productApi } from "@/services/product.js"
-import { cartApi } from "@/services/product.js"
+import { cartApi } from "@/services/cart.js"
 import data from "./data.json";
 
 export default {
@@ -116,39 +116,52 @@ export default {
       console.log(this.currentUser._id);
       let prodId = data.productId._id;
 
+      // If cart is not empty
       if ( this.cart.length > 0 ) {
-        // update cart
         let exists = this.cart.find((product) => product.productId._id === prodId);
         if (exists) {
           exists.addedQuantity += data.addedQuantity;
-          
           console.log("I am adding more");
-          console.log(exists.prodId);
-          console.log(exists);
-          //api update cart
         } else {
-          // otherwise add more to cart
           exists = { ...data, addedQuantity: data.addedQuantity };
+          //update cart api
+          console.log("item not in cart yet");   
           this.cart.push(exists);
           console.log("I am adding one");
-          console.log(exists);
-          console.log(data.productId._id);
+          
         }
         console.log("something in cart");
+        console.log(exists); //this works (addedQuantity & productID[])
         // if empty cart
       } else {
         // create cart
         // nothing in cart
         let exists = this.cart.find((product) => product.productId._id === prodId);
         exists = { ...data, addedQuantity: data.addedQuantity };
-        this.cart.push(exists);
+        console.log(exists.productId._id);
+        console.log(exists.addedQuantity);
+        console.log(this.currentUser._id);
+        // api create cart
+        cartApi.createCart(this.currentUser._id, {
+          userId: this.currentUser._id,
+          products: [{
+            productId: exists.productId._id,
+            quantity: exists.addedQuantity
+          }]
+
+        })
+        .then(res => {
+          console.log(res.data);
+          this.cart.push(exists);
+          return res.data;
+        }).catch(err => console.log(err));
         console.log("nothing in cart");
+        console.log(exists); //this works (addedQuantity & productID[])
+        //
       }
       // store data to cart
       console.log(this.currentUser._id);
-      
-      this.storeCart();
-      //api create cart
+      this.storeCart(); 
     },
 
 
