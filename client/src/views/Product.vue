@@ -107,10 +107,6 @@ export default {
       this.$emit("add-to-cart", data);
     },
 
-    addToC() {
-      
-    },
-
     resetTotal() {
       this.total = 1;
       this.justAdded = false;

@@ -79,7 +79,7 @@ export default {
         (product) => (totalValue += product.productId.price * product.addedQuantity)
       );
       return totalValue;
-      
+     
     },
     
   },

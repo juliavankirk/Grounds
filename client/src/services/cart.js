@@ -5,11 +5,11 @@ export const cartApi = {
   getAllCarts: () => 
     Api.get('/carts/', { headers: authHeader() }),
   getCart: userId => 
-    Api.get(`/carts/find/${userId}`, { headers: authHeader() }),
-  createCart: (cartId, data) =>
-    Api.post('/carts/', cartId, data, { headers: authHeader() }),
-  updateCart: (cartId, data) => 
-    Api.put(`/carts/${cartId}`, data, { headers: authHeader() }),
-  deleteCart: cartId => 
-    Api.delete(`/carts/${cartId}`, { headers: authHeader() })
+    Api.get(`/users/carts/${userId}`, { headers: authHeader() }),
+  createCart: (userId, cart) =>
+    Api.post(`/users/${userId}/carts/`, cart, { headers: authHeader() }),
+  updateCart: (userId, cartId, data) => 
+    Api.put(`users/${userId}/carts/${cartId}`, data, { headers: authHeader() }),
+  deleteCart: (userId, cartId) => 
+    Api.delete(`users/${userId}/carts/${cartId}`, { headers: authHeader() })
 }

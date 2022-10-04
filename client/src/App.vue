@@ -46,6 +46,7 @@ import Menu from "./components/Menu.vue";
 import User from "./components/User.vue"
 import Cart from "./components/Cart.vue";
 import { productApi } from "@/services/product.js"
+import { cartApi } from "@/services/product.js"
 import data from "./data.json";
 
 export default {
@@ -67,7 +68,7 @@ export default {
       scrollTop: false,
       cart: [],
       product: [],
-      allProducts: []
+      userCart: [],
     };
   },
 
@@ -88,6 +89,7 @@ export default {
         });
   },
 
+
     toggleMenu(myVar) {
       if (myVar === "logo") {
         this.showMenu = false;
@@ -104,11 +106,14 @@ export default {
       this.scrollTop = !this.scrollTop;
     },
     storeCart() {
+      //api get cart
       localStorage.setItem("cart", JSON.stringify(this.cart));
+      
     },
 
     addToCart(data) {
       console.log(data);
+      console.log(this.currentUser._id);
       let prodId = data.productId._id;
       // check if item exists in cart exists in db
       let exists = this.cart.find((product) => product.productId._id === prodId);
@@ -116,8 +121,9 @@ export default {
         exists.addedQuantity += data.addedQuantity;
         
         console.log("I am adding more");
-        console.log(exists.data);
+        console.log(exists.prodId);
         console.log(exists);
+        //api update cart
       } else {
         // otherwise add more to cart
         exists = { ...data, addedQuantity: data.addedQuantity };
@@ -127,23 +133,24 @@ export default {
         console.log(data.productId._id);
       }
       // store data to cart
+      console.log(this.currentUser._id);
       this.storeCart();
+      //api create cart
     },
 
 
 
-
-
-
-
-
     changeQuantity(data) {
-      const index = this.cart.findIndex((prod) => prod.id === data.productId._id);
+      //if product exists within cart
+      const index = this.cart.findIndex((prod) => prod.productId._id === data.productId);
+      //if operation subtracts
       if (data.operation === "subtract") {
+        // if qty equals 1
         if (this.cart[index].addedQuantity === 1) {
+          // return cart with only the productID that does not match the current index's productId
           this.cart = this.cart
             .slice()
-            .filter((prod) => prod.id !== data.productId._id);
+            .filter((prod) => prod.productId._id !== data.productId);
         } else {
           this.cart[index] = {
             ...this.cart[index],
@@ -157,10 +164,12 @@ export default {
         };
       }
       this.storeCart();
+      //api update cart
     },
     emptyCart() {
       this.cart = [];
       this.storeCart();
+      //api delete cart
     },
   },
   created() {
@@ -168,6 +177,7 @@ export default {
       localStorage.setItem("cart", JSON.stringify(this.cart));
     }
     this.retrieveProducts();
+
   },
   mounted() {
     this.cart = JSON.parse(localStorage.getItem("cart"));
