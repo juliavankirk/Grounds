@@ -33,7 +33,7 @@
     </div>
     <div class="cart__total">
       <h4>Total</h4>
-      <p>{{ (total) }},00 kr.</p>
+      <p>{{ this.total }},00 kr.</p>
     </div>
     <router-link
       class="cart__router-link"
