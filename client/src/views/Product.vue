@@ -102,7 +102,7 @@ export default {
       this.justAdded = true;
       const data = {
         productId: currentItem,
-        addedQuantity: this.total,
+        quantity: this.total,
       };
       this.$emit("add-to-cart", data);
     },

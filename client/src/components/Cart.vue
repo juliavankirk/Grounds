@@ -24,7 +24,7 @@
           <button class="less" @click="changeQuantity('subtract', product.productId._id)">
             -
           </button>
-          <p class="value">{{ product.addedQuantity }}</p>
+          <p class="value">{{ product.quantity }}</p>
           <button class="more" @click="changeQuantity('add', product.productId._id)">
             +
           </button>
@@ -76,12 +76,10 @@ export default {
     total() {
       let totalValue = 0;
       this.cart.forEach(
-        (product) => (totalValue += product.productId.price * product.addedQuantity)
+        (product) => (totalValue += product.productId.price * product.quantity)
       );
       return totalValue;
-     
     },
-    
   },
 };
 </script>

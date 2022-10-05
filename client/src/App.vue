@@ -71,8 +71,6 @@ export default {
       user: []
     };
   },
-  
-
 
   methods: {
     logOut() {
@@ -109,7 +107,7 @@ export default {
           userId: this.currentUser._id,
           products: [{
             productId: exists.productId._id,
-            quantity: exists.addedQuantity
+            quantity: exists.quantity
           }]
         }).then(res => {
           console.log(res.data);
@@ -118,6 +116,25 @@ export default {
           //this.userCart = res.data._id;
           return res.data;
         }).catch(err => console.log(err));
+  },
+
+  async updateUserCart() {
+    const user = this.currentUser._id;
+    const myCart = this.userCart._id;
+    console.log("inside update method, parsed below");
+    console.log(this.cart);
+
+    await cartApi.updateCart(user, myCart, {
+      user: this.user,
+      products: this.cart
+    })
+    .then(res => {
+      console.log(res.data);
+      this.retrieveCart();
+    })
+    .catch (err => {
+      console.log(err);
+    })
   },
 
 
@@ -153,10 +170,10 @@ export default {
       if ( this.cart.length > 0 ) {
         let exists = this.cart.find((product) => product.productId._id === prodId);
         if (exists) {
-          exists.addedQuantity += data.addedQuantity;
+          exists.quantity += data.quantity;
           console.log("I am adding more");
         } else {
-          exists = { ...data, addedQuantity: data.addedQuantity };
+          exists = { ...data, quantity: data.quantity };
           //update cart api
           console.log("item not in cart yet");   
           this.cart.push(exists);
@@ -164,60 +181,53 @@ export default {
           
         }
         console.log("something in cart");
-        console.log(exists); //this works (addedQuantity & productID[])
+        console.log(exists); //this works (quantity & productID[])
         // if empty cart
+        console.log("cart below");
+        const cartss = JSON.parse(JSON.stringify(this.cart))
+        console.log(cartss);
+        if (this.currentUser) {
+          // api update cart
+          console.log("update user id");
+          console.log(this.currentUser);
+          console.log("update cart id")
+          this.updateUserCart();
+          console.log("cart below in updated");
+          console.log(this.cart);
+        }
       } else {
         // create cart
         // nothing in cart
         let exists = this.cart.find((product) => product.productId._id === prodId);
-        exists = { ...data, addedQuantity: data.addedQuantity };
+        exists = { ...data, quantity: data.quantity };
         console.log(exists.productId._id);
-        console.log(exists.addedQuantity);
+        console.log(exists.quantity);
         if (this.currentUser) {
           console.log(this.currentUser._id);
+          console.log("making a cart");
+          console.log(exists);
           this.makeCart(exists);
+          console.log(this.cart);
         } else {
           this.cart.push(exists);
         }
-
-        /**
-         * // api create cart
-        cartApi.createCart(this.currentUser._id, {
-          userId: this.currentUser._id,
-          products: [{
-            productId: exists.productId._id,
-            quantity: exists.addedQuantity
-          }]
-
-        })
-        .then(res => {
-          console.log(res.data);
-          this.cart.push(exists);
-          return res.data;
-        }).catch(err => console.log(err));
-        console.log("nothing in cart");
-        console.log(exists); //this works (addedQuantity & productID[])
-         * 
-         * 
-         */
-        
-        
-        //
       }
       // store data to cart
       this.storeCart(); 
     },
 
-
-
     changeQuantity(data) {
       //if product exists within cart
       const index = this.cart.findIndex((prod) => prod.productId._id === data.productId);
       //if operation subtracts
+      console.log("below is data then index");
+      console.log(data);
+      console.log(index);
+      
       if (data.operation === "subtract") {
         console.log("subtracting");
         // if qty equals 1
-        if (this.cart[index].addedQuantity === 1) {
+        if (this.cart[index].quantity === 1) {
           // return cart with only the productID that does not match the current index's productId
           this.cart = this.cart
             .slice()
@@ -225,14 +235,14 @@ export default {
         } else {
           this.cart[index] = {
             ...this.cart[index],
-            addedQuantity: this.cart[index].addedQuantity - 1,
+            quantity: this.cart[index].quantity - 1,
           };
         }
       } else if (data.operation === "add") {
         console.log("adding");
         this.cart[index] = {
           ...this.cart[index],
-          addedQuantity: this.cart[index].addedQuantity + 1,
+          quantity: this.cart[index].quantity + 1,
         };
       }
       this.storeCart();
@@ -246,8 +256,13 @@ export default {
         console.log("userId");
         console.log(this.currentUser._id);
         console.log("cartId");
-        console.log(JSON.parse(JSON.stringify(this.userCart._id)));
-        cartApi.deleteCart(this.currentUser._id, this.userCart._id);
+        if (this.userCart) {
+          console.log(this.userCart);
+          console.log(JSON.parse(JSON.stringify(this.userCart._id)));
+          cartApi.deleteCart(this.currentUser._id, this.userCart._id);
+        } else {
+          console.log("Nothing to delete");
+        }
       }
     },
   },
@@ -256,11 +271,12 @@ export default {
       localStorage.setItem("cart", JSON.stringify(this.cart));
     }
     this.retrieveProducts();
-
+    this.retrieveCart();
   },
   mounted() {
     this.cart = JSON.parse(localStorage.getItem("cart"));
     this.retrieveProducts();
+    this.retrieveCart();
   },
 };
 </script>
