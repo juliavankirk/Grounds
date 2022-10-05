@@ -3,7 +3,7 @@
     <main class="register">
     <Header @toggle-menu-show="$emit('toggle-menu-show', $event)" />
     <form class="register__form" @submit.prevent="submitHandler" novalidate>
-      <div class="register__form__input" v-if="!successful">
+      <div class="register__form__input" >
         <h1 class="register__form__input__heading">Welcome back, {{currentUser.forename}}!</h1>
         <h2 class="register__form__input__subheading">Update your account</h2>
     <section>
@@ -12,7 +12,7 @@
               <label
                 for="username"
                 :class="emptyFields.includes('username') ? 'red-label' : ''"
-                >Username: {{currentUser.username}}</label
+                >Username: {{thisUser.username}}</label
               >
             </div>
             <input
@@ -33,7 +33,7 @@
               <label
                 for="forename"
                 :class="emptyFields.includes('forename') ? 'red-label' : ''"
-                >First name: {{currentUser.forename}}</label
+                >First name: {{thisUser.forename}}</label
               >
               <p class="empty-message" v-if="emptyFields.includes('forename')">
                 First name is required!
@@ -58,7 +58,7 @@
               <label
                 for="surname"
                 :class="emptyFields.includes('surname') ? 'red-label' : ''"
-                >Last name: {{currentUser.surname}}</label
+                >Last name: {{thisUser.surname}}</label
               >
               <p class="empty-message" v-if="emptyFields.includes('surname')">
                 Last name is required!
@@ -83,7 +83,7 @@
               <label
                 for="email"
                 :class="emptyFields.includes('email') ? 'red-label' : ''"
-                >Email address: {{currentUser.email}}</label
+                >Email address: {{thisUser.email}}</label
               >
               <p class="empty-message" v-if="emptyFields.includes('email')">
                 Email is required!
@@ -111,7 +111,7 @@
               <label
                 for="password"
                 :class="emptyFields.includes('password') ? 'red-label' : ''"
-                >Password</label
+                >Password (must be the same)</label
               >
               <p class="empty-message" v-if="emptyFields.includes('password')">
                 Password is required!
@@ -171,20 +171,30 @@ export default {
     invalidEmail: false,
     submitted: false,
     successful: false,
-    message: ''
+    message: '',
+    thisUser: []
   }),
   computed: {
     currentUser() {
       return this.$store.state.auth.user
     }
   },
+  
   methods: {
     selectMethod(method) {
       this.picked = method;
     },
 
     getUser() {
-      console.log(this.user);
+      const id = this.currentUser._id
+      userApi.getUser(id)
+      .then(res => {
+        this.thisUser = res.data;
+        console.log(res.data);
+      })
+      .catch(err => {
+        console.log(err.data);
+      })
     },
     clickDeleteUser() {
       const id = this.$store.state.auth.user._id
@@ -211,6 +221,7 @@ export default {
             this.message = res.message
             this.successful = true
             console.log(res.data);
+            this.getUser()
             this.message = "Profile successfully updated!";
           })
           .catch (err => {
@@ -223,6 +234,8 @@ export default {
           });
         }
       });
+      
+      console.log(this.currentUser);
 
       const myRefs = [
         this.$refs.username,
@@ -257,6 +270,13 @@ export default {
         this.invalidEmail = true;
       }
     },
+    
+  },
+  created() {
+    this.getUser();
+  },
+  mounted() {
+    this.getUser()
   }
 }
 </script>
