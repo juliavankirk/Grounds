@@ -3,7 +3,10 @@
   <Header 
   :title="title"
   @toggle-menu-show="$emit('toggle-menu-show', $event)" />
-  <button class="default-btn">Add Product</button>
+  <button 
+    class="default-btn"
+    to=""
+  >Add Product</button>
   <section class="product-list">
     <b-col class="col-xl-6">
       <b-card class="my-cards"
@@ -78,6 +81,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.default-btn {
+  top: 50%;
+  left: 50%;
+  transform: translate(50%,50%);
+  margin-left: 3rem;
+  margin-bottom: 4rem;
+  
+  @media (min-width: 768px) {
+    margin-left: 30%;
+    margin-bottom: 1rem;
+  }
+  @media (min-width: 1205px) {
+    margin-left: 43%;
+    margin-bottom: 1rem;
+  }
+}
 .col-xl-6 {
   width: 100%;
   display: flex;
