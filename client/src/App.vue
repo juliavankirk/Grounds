@@ -118,13 +118,11 @@ export default {
         }).catch(err => console.log(err));
   },
 
-  async updateUserCart() {
+  updateUserCart() {
     const user = this.currentUser._id;
     const myCart = this.userCart._id;
-    console.log("inside update method, parsed below");
-    console.log(this.cart);
-
-    await cartApi.updateCart(user, myCart, {
+    try {
+      cartApi.updateCart(user, myCart, {
       user: this.user,
       products: this.cart
     })
@@ -135,6 +133,9 @@ export default {
     .catch (err => {
       console.log(err);
     })
+    } catch (error) {
+      error
+    }
   },
 
 
@@ -188,12 +189,7 @@ export default {
         console.log(cartss);
         if (this.currentUser) {
           // api update cart
-          console.log("update user id");
-          console.log(this.currentUser);
-          console.log("update cart id")
           this.updateUserCart();
-          console.log("cart below in updated");
-          console.log(this.cart);
         }
       } else {
         // create cart
@@ -221,8 +217,6 @@ export default {
       const index = this.cart.findIndex((prod) => prod.productId._id === data.productId);
       //if operation subtracts
       console.log("below is data then index");
-      console.log(data);
-      console.log(index);
       
       if (data.operation === "subtract") {
         console.log("subtracting");
@@ -247,6 +241,10 @@ export default {
       }
       this.storeCart();
       //api update cart
+      if (this.currentUser) {
+        // api update cart
+          this.updateUserCart();
+      }
     },
     emptyCart() {
       this.cart = [];
