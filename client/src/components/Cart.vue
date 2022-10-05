@@ -56,11 +56,6 @@ export default {
     editSrc(product) {
       return require(`${product.img}`);
     },
-    separator(numb) {
-      var str = numb.toString().split(".");
-      str[0] = str[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      return str.join(".");
-    },
     changeQuantity(operation, id) {
       const data = {
         productId: id,

@@ -63,7 +63,6 @@
 <script>
 import Header from "../components/ProductPage/Header.vue";
 import { productApi } from "@/services/product.js"
-import data from "../data.json";
 
 export default {
   name: "ProductPage",
