@@ -24,7 +24,7 @@
     </ul>
     </section>
 
-    <section v-if="currentAdmin.isAdmin === true">
+    <section v-if="currentAdmin && !currentAdmin.isAdmin">
       <ul class="navbar__desktop-menu">
       <li class="navbar__desktop-menu__link">
         <router-link to="/">Home</router-link>

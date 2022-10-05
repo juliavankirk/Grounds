@@ -47,7 +47,6 @@ import User from "./components/User.vue"
 import Cart from "./components/Cart.vue";
 import { productApi } from "@/services/product.js"
 import { cartApi } from "@/services/cart.js"
-import data from "./data.json";
 
 export default {
   name: "App",
@@ -69,8 +68,11 @@ export default {
       cart: [],
       product: [],
       userCart: [],
+      user: []
     };
   },
+  
+
 
   methods: {
     logOut() {
@@ -87,6 +89,17 @@ export default {
         .catch(err => {
           console.log(err);
         });
+  },
+
+  retrieveCart() {
+    cartApi.getCart(this.currentUser._id)
+    .then(res => {
+      this.userCart = res.data
+      console.log(res.data);
+    })
+    .catch(err => {
+      console.log(err.data);
+    })
   },
 
 
@@ -113,7 +126,7 @@ export default {
 
     addToCart(data) {
       console.log(data);
-      console.log(this.currentUser._id);
+      console.log(this.currentUser);
       let prodId = data.productId._id;
 
       // If cart is not empty
@@ -193,20 +206,28 @@ export default {
       //api update cart
     },
     emptyCart() {
+      //api delete cart
+      console.log("userId");
+      console.log(this.currentUser._id);
+      console.log("cartId");
+      console.log(JSON.parse(JSON.stringify(this.userCart._id)));
       this.cart = [];
       this.storeCart();
-      //api delete cart
+      cartApi.deleteCart(this.currentUser._id, this.userCart._id);
+      
     },
   },
   created() {
     if (localStorage.getItem("cart") === null) {
       localStorage.setItem("cart", JSON.stringify(this.cart));
     }
+    this.retrieveCart();
     this.retrieveProducts();
 
   },
   mounted() {
     this.cart = JSON.parse(localStorage.getItem("cart"));
+    this.retrieveCart();
     this.retrieveProducts();
   },
 };
