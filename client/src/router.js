@@ -13,6 +13,7 @@ import Success from './views/Success.vue'
 import Login from './views/Login.vue'
 import Register from './views/Register.vue'
 import Profile from './views/Profile.vue'
+import PageNotFound from './views/PageNotFound.vue'
 
 Vue.use(Router)
 
@@ -83,6 +84,7 @@ export default new Router({
       path: '/profile/:id',
       name: 'profile',
       component: Profile,
-    }
+    },
+    { path: '/:pathMatch(.*)*', component: PageNotFound }
   ]
 })

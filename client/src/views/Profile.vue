@@ -4,7 +4,7 @@
     <Header @toggle-menu-show="$emit('toggle-menu-show', $event)" />
     <form class="register__form" @submit.prevent="submitHandler" novalidate>
       <div class="register__form__input" >
-        <h1 class="register__form__input__heading">Welcome back, {{currentUser.forename}}!</h1>
+        <h1 class="register__form__input__heading">Welcome back, {{thisUser.forename}}!</h1>
         <h2 class="register__form__input__subheading">Update your account</h2>
     <section>
           <div class="register__form__input__item no-margin full-span">
