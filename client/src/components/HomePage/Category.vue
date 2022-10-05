@@ -117,6 +117,19 @@ export default {
     }
   }
 
+  #coffee {
+    padding-bottom: 1.7rem;
+  }
+
+  #brewers {
+    padding-bottom: 3.7rem;
+  }
+
+  #mugs {
+    padding-bottom: 2rem;
+  }
+
+
   &__link {
     margin-top: 1.7rem;
     margin-bottom: 2.2rem;
