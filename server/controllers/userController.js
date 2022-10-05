@@ -1,6 +1,6 @@
 const CryptoJS = require("crypto-js"); 
-const User = require("../models/UserModel");
-const Cart = require("../models/CartModel");
+const User = require("../models/User");
+const Cart = require("../models/Cart");
 const {
   verifyToken,
   verifyTokenAndAuthorization,

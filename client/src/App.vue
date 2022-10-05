@@ -92,14 +92,32 @@ export default {
   },
 
   retrieveCart() {
-    cartApi.getCart(this.currentUser._id)
-    .then(res => {
-      this.userCart = res.data
-      console.log(res.data);
-    })
-    .catch(err => {
-      console.log(err.data);
-    })
+    if (this.currentUser) {
+      cartApi.getCart(this.currentUser._id)
+      .then(res => {
+        this.userCart = res.data
+        console.log(res.data);
+      })
+      .catch(err => {
+        console.log(err.data);
+      })
+    }
+  },
+
+  async makeCart(exists) {
+    await cartApi.createCart(this.currentUser._id, {
+          userId: this.currentUser._id,
+          products: [{
+            productId: exists.productId._id,
+            quantity: exists.addedQuantity
+          }]
+        }).then(res => {
+          console.log(res.data);
+          this.retrieveCart();
+          this.cart.push(exists);
+          //this.userCart = res.data._id;
+          return res.data;
+        }).catch(err => console.log(err));
   },
 
 
@@ -126,7 +144,9 @@ export default {
 
     addToCart(data) {
       console.log(data);
+      if (this.currentUser) {
       console.log(this.currentUser);
+      }
       let prodId = data.productId._id;
 
       // If cart is not empty
@@ -153,8 +173,15 @@ export default {
         exists = { ...data, addedQuantity: data.addedQuantity };
         console.log(exists.productId._id);
         console.log(exists.addedQuantity);
-        console.log(this.currentUser._id);
-        // api create cart
+        if (this.currentUser) {
+          console.log(this.currentUser._id);
+          this.makeCart(exists);
+        } else {
+          this.cart.push(exists);
+        }
+
+        /**
+         * // api create cart
         cartApi.createCart(this.currentUser._id, {
           userId: this.currentUser._id,
           products: [{
@@ -170,10 +197,14 @@ export default {
         }).catch(err => console.log(err));
         console.log("nothing in cart");
         console.log(exists); //this works (addedQuantity & productID[])
+         * 
+         * 
+         */
+        
+        
         //
       }
       // store data to cart
-      console.log(this.currentUser._id);
       this.storeCart(); 
     },
 
@@ -184,6 +215,7 @@ export default {
       const index = this.cart.findIndex((prod) => prod.productId._id === data.productId);
       //if operation subtracts
       if (data.operation === "subtract") {
+        console.log("subtracting");
         // if qty equals 1
         if (this.cart[index].addedQuantity === 1) {
           // return cart with only the productID that does not match the current index's productId
@@ -197,6 +229,7 @@ export default {
           };
         }
       } else if (data.operation === "add") {
+        console.log("adding");
         this.cart[index] = {
           ...this.cart[index],
           addedQuantity: this.cart[index].addedQuantity + 1,
@@ -206,28 +239,27 @@ export default {
       //api update cart
     },
     emptyCart() {
-      //api delete cart
-      console.log("userId");
-      console.log(this.currentUser._id);
-      console.log("cartId");
-      console.log(JSON.parse(JSON.stringify(this.userCart._id)));
       this.cart = [];
       this.storeCart();
-      cartApi.deleteCart(this.currentUser._id, this.userCart._id);
-      
+      if (this.currentUser) {
+        //api delete cart
+        console.log("userId");
+        console.log(this.currentUser._id);
+        console.log("cartId");
+        console.log(JSON.parse(JSON.stringify(this.userCart._id)));
+        cartApi.deleteCart(this.currentUser._id, this.userCart._id);
+      }
     },
   },
   created() {
     if (localStorage.getItem("cart") === null) {
       localStorage.setItem("cart", JSON.stringify(this.cart));
     }
-    this.retrieveCart();
     this.retrieveProducts();
 
   },
   mounted() {
     this.cart = JSON.parse(localStorage.getItem("cart"));
-    this.retrieveCart();
     this.retrieveProducts();
   },
 };

@@ -2,8 +2,6 @@ import { Api } from '@/services/Api'
 import authHeader from './auth.js'
 
 export const cartApi = {
-  getAllCarts: () => 
-    Api.get('/carts/', { headers: authHeader() }),
   getCart: userId => 
     Api.get(`/users/carts/${userId}`, { headers: authHeader() }),
   createCart: (userId, cart) =>

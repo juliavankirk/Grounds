@@ -2,7 +2,7 @@
 <div>
   <div :class="['overlay', show ? 'showElement' : 'hideElement']"></div>
   <div :class="['menu', show ? 'showElement' : 'hideElement']" ref="mobileMenu">
-    <section class="navbar" v-if="!currentUser">
+    <section class="navbar" v-if="!currentUser ">
       <b-navbar-nav>
         <b-nav-item href="/">Home</b-nav-item>
         <b-nav-item href="/products">Products</b-nav-item>
@@ -11,7 +11,7 @@
         <b-nav-item class="invis" href="/register">Register</b-nav-item>
       </b-navbar-nav>
     </section>
-    <section class="navbar" v-if="currentUser && currentUser.isAdmin">
+    <section class="navbar" v-if="currentUser && !currentUser.isAdmin">
       <b-navbar-nav>
         <b-nav-item href="/">Home</b-nav-item>
         <b-nav-item href="/products">Products</b-nav-item>
@@ -20,7 +20,7 @@
         <b-nav-item class="invis" @click.prevent="logOut">Logout</b-nav-item>
       </b-navbar-nav>
     </section>
-    <section class="navbar" v-if="currentUser && !currentUser.isAdmin">
+    <section class="navbar" v-if="currentUser && currentUser.isAdmin">
       <b-navbar-nav>
         <b-nav-item href="/">Home</b-nav-item>
         <b-nav-item href="/catalog">Catalog</b-nav-item>
@@ -38,7 +38,7 @@
 export default {
   name: "Menu",
   computed: {
-    currentUser(){
+    currentUser() {
       return this.$store.state.auth.user;
     }
   },

@@ -14,7 +14,7 @@
         alt="grounds logo"
         class="navbar__homeLink__logo"
     /></router-link>
-    <section v-if="!currentAdmin">
+    <section v-if="!currentAdmin || !currentAdmin.isAdmin">
       <ul class="navbar__desktop-menu">
       <li class="navbar__desktop-menu__link">
         <router-link to="/">Home</router-link>
@@ -24,7 +24,7 @@
     </ul>
     </section>
 
-    <section v-if="currentAdmin && !currentAdmin.isAdmin">
+    <section v-if="currentAdmin && currentAdmin.isAdmin">
       <ul class="navbar__desktop-menu">
       <li class="navbar__desktop-menu__link">
         <router-link to="/">Home</router-link>

@@ -32,4 +32,4 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true } // Created at and Updated at times logged
 );
 
-module.exports = mongoose.model("UserModel", UserSchema);
+module.exports = mongoose.model("User", UserSchema);
