@@ -10,7 +10,7 @@
     </section>
     <section v-if="currentUser" class="navbar">
       <b-navbar-nav>
-        <b-nav-item href="/profile">Profile</b-nav-item>
+        <b-nav-item :to="`/profile/${currentUser._id}`">Profile</b-nav-item>
         <b-nav-item href @click.prevent="logOut">Sign out</b-nav-item>
       </b-navbar-nav>
     </section>
@@ -29,8 +29,9 @@ export default {
   },
   methods: {
     logOut() {
-      this.$store.dispatch('auth/logout');
-      this.$router.push('/login');
+      this.$store.dispatch('auth/logout').then(() => {
+        this.$router.push('/login')
+      })
     }
   },
   props: { show: Boolean, scrollTop: Boolean },
@@ -79,7 +80,14 @@ export default {
 }
 
 .navbar {
+  font-weight: 700;
+  font-size: 1.2rem;
+  line-height: 3.825rem;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+  
   @media (min-width: 768px) {
+    font-size: 1.7rem;
     display: flex;
     align-items: center;
   }

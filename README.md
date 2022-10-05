@@ -82,4 +82,4 @@ Grounds is an e-commerce website that allows people to buy and sell products ove
 
 ## Teaser (MS3)
 
-![Teaser](./images/teaser.png)
+![Teaser](./images/Grounds.png)

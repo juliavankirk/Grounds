@@ -45,7 +45,8 @@ import Footer from "./components/Footer.vue";
 import Menu from "./components/Menu.vue";
 import User from "./components/User.vue"
 import Cart from "./components/Cart.vue";
-import data from "./data.json";
+import { productApi } from "@/services/product.js"
+import { cartApi } from "@/services/cart.js"
 
 export default {
   name: "App",
@@ -65,7 +66,9 @@ export default {
       showConfirmation: false,
       scrollTop: false,
       cart: [],
-      products: data,
+      product: [],
+      userCart: [],
+      user: []
     };
   },
 
@@ -74,6 +77,68 @@ export default {
       this.$store.dispatch('auth/logout');
       this.$router.push('/login');
     },
+    retrieveProducts() {
+      productApi
+        .getProducts()
+        .then(res => {
+          this.allProducts = res.data
+          console.log(res.data);
+      })
+        .catch(err => {
+          console.log(err);
+        });
+  },
+
+  retrieveCart() {
+    if (this.currentUser) {
+      cartApi.getCart(this.currentUser._id)
+      .then(res => {
+        this.userCart = res.data
+        console.log(res.data);
+      })
+      .catch(err => {
+        console.log(err.data);
+      })
+    }
+  },
+
+  async makeCart(exists) {
+    await cartApi.createCart(this.currentUser._id, {
+          userId: this.currentUser._id,
+          products: [{
+            productId: exists.productId._id,
+            quantity: exists.quantity
+          }]
+        }).then(res => {
+          console.log(res.data);
+          this.retrieveCart();
+          this.cart.push(exists);
+          //this.userCart = res.data._id;
+          return res.data;
+        }).catch(err => console.log(err));
+  },
+
+  updateUserCart() {
+    const user = this.currentUser._id;
+    const myCart = this.userCart._id;
+    try {
+      cartApi.updateCart(user, myCart, {
+      user: this.user,
+      products: this.cart
+    })
+    .then(res => {
+      console.log(res.data);
+      this.retrieveCart();
+    })
+    .catch (err => {
+      console.log(err);
+    })
+    } catch (error) {
+      error
+    }
+  },
+
+
     toggleMenu(myVar) {
       if (myVar === "logo") {
         this.showMenu = false;
@@ -90,57 +155,126 @@ export default {
       this.scrollTop = !this.scrollTop;
     },
     storeCart() {
+      //api get cart
       localStorage.setItem("cart", JSON.stringify(this.cart));
+      
     },
+
     addToCart(data) {
-      let product = this.products.find(
-        (product) => product.id === data.productId
-      );
-      if (this.cart.find((prod) => prod.id === product.id)) {
-        const index = this.cart.findIndex((prod) => prod.id === product.id);
-        this.cart[index] = {
-          ...this.cart[index],
-          addedQuantity: this.cart[index].addedQuantity + data.addedQuantity,
-        };
-      } else {
-        product = { ...product, addedQuantity: data.addedQuantity };
-        this.cart.push(product);
+      console.log(data);
+      if (this.currentUser) {
+      console.log(this.currentUser);
       }
-      this.storeCart();
+      let prodId = data.productId._id;
+
+      // If cart is not empty
+      if ( this.cart.length > 0 ) {
+        let exists = this.cart.find((product) => product.productId._id === prodId);
+        if (exists) {
+          exists.quantity += data.quantity;
+          console.log("I am adding more");
+        } else {
+          exists = { ...data, quantity: data.quantity };
+          //update cart api
+          console.log("item not in cart yet");   
+          this.cart.push(exists);
+          console.log("I am adding one");
+          
+        }
+        console.log("something in cart");
+        console.log(exists); //this works (quantity & productID[])
+        // if empty cart
+        console.log("cart below");
+        const cartss = JSON.parse(JSON.stringify(this.cart))
+        console.log(cartss);
+        if (this.currentUser) {
+          // api update cart
+          this.updateUserCart();
+        }
+      } else {
+        // create cart
+        // nothing in cart
+        let exists = this.cart.find((product) => product.productId._id === prodId);
+        exists = { ...data, quantity: data.quantity };
+        console.log(exists.productId._id);
+        console.log(exists.quantity);
+        if (this.currentUser) {
+          console.log(this.currentUser._id);
+          console.log("making a cart");
+          console.log(exists);
+          this.makeCart(exists);
+          console.log(this.cart);
+        } else {
+          this.cart.push(exists);
+        }
+      }
+      // store data to cart
+      this.storeCart(); 
     },
+
     changeQuantity(data) {
-      const index = this.cart.findIndex((prod) => prod.id === data.productId);
+      //if product exists within cart
+      const index = this.cart.findIndex((prod) => prod.productId._id === data.productId);
+      //if operation subtracts
+      console.log("below is data then index");
+      
       if (data.operation === "subtract") {
-        if (this.cart[index].addedQuantity === 1) {
+        console.log("subtracting");
+        // if qty equals 1
+        if (this.cart[index].quantity === 1) {
+          // return cart with only the productID that does not match the current index's productId
           this.cart = this.cart
             .slice()
-            .filter((prod) => prod.id !== data.productId);
+            .filter((prod) => prod.productId._id !== data.productId);
         } else {
           this.cart[index] = {
             ...this.cart[index],
-            addedQuantity: this.cart[index].addedQuantity - 1,
+            quantity: this.cart[index].quantity - 1,
           };
         }
       } else if (data.operation === "add") {
+        console.log("adding");
         this.cart[index] = {
           ...this.cart[index],
-          addedQuantity: this.cart[index].addedQuantity + 1,
+          quantity: this.cart[index].quantity + 1,
         };
       }
       this.storeCart();
+      //api update cart
+      if (this.currentUser) {
+        // api update cart
+          this.updateUserCart();
+      }
     },
     emptyCart() {
       this.cart = [];
       this.storeCart();
+      if (this.currentUser) {
+        //api delete cart
+        console.log("userId");
+        console.log(this.currentUser._id);
+        console.log("cartId");
+        if (this.userCart) {
+          console.log(this.userCart);
+          console.log(JSON.parse(JSON.stringify(this.userCart._id)));
+          cartApi.deleteCart(this.currentUser._id, this.userCart._id);
+        } else {
+          console.log("Nothing to delete");
+        }
+      }
     },
   },
   created() {
     if (localStorage.getItem("cart") === null) {
       localStorage.setItem("cart", JSON.stringify(this.cart));
     }
+    this.retrieveProducts();
+    this.retrieveCart();
   },
   mounted() {
     this.cart = JSON.parse(localStorage.getItem("cart"));
+    this.retrieveProducts();
+    this.retrieveCart();
   },
 };
 </script>

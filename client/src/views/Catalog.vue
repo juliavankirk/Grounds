@@ -1,51 +1,54 @@
 <template>
-  <div>
-    <Header 
-      :title="title"
-      @toggle-menu-show="$emit('toggle-menu-show', $event)" />
-        <b-col class="col-xl-6">
-          <b-card class="my-cards"
-            v-for="(product, index) in allProducts"
-            :key="index"
-          >
-          <router-link :to="`/product/${product._id}`">
-          <b-card-img 
-            :src="product.img"
-            :alt="product.title"
-            top
-          >
-          </b-card-img>
-          <b-card-title class="title">
-            {{product.title}}
-          </b-card-title>
-          <b-card-text class="price">
-            {{product.price}},00 kr
-          </b-card-text>
-          </router-link>
-          </b-card>
-        </b-col>
-  </div>
+<div>
+  <Header 
+  :title="title"
+  @toggle-menu-show="$emit('toggle-menu-show', $event)" />
+  <button class="default-btn">Add Product</button>
+  <section class="product-list">
+    <b-col class="col-xl-6">
+      <b-card class="my-cards"
+        v-for="(product, index) in allProducts"
+        :key="index"
+      >
+        <router-link :to="`/item/${product._id}`">
+        <b-card-img 
+          :src="product.img"
+          :alt="product.title"
+          top
+        >
+        </b-card-img>
+        <b-card-title class="title">
+          {{product.title}}
+        </b-card-title>
+        <b-card-text class="price">
+          {{product.price}},00 kr
+        </b-card-text>
+        </router-link>
+      </b-card>
+    </b-col>
+  </section>
+
+</div>
+  
 </template>
+
 <script>
 import Header from '../components/ProductsPage/Header.vue';
-import ProductCard from '@/components/ProductsPage/ProductCard';
 import { productApi } from '@/services/product.js'
 
+
 export default {
-  name: "Products",
+  name: "Catalog",
   components: {
     Header,
-    ProductCard
   },
   emits: ["toggle-menu-show"],
   data() {
     return {
-      title: "Products",
-      product: [],
-      allProducts: [],
+      title: "Catalog",
+      allProducts: ""
     }
   },
-  
   methods: {
     retrieveProducts() {
       productApi
@@ -70,6 +73,7 @@ export default {
   mounted() {
     this.retrieveProducts();
   }
+  
 };
 </script>
 

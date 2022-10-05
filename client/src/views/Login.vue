@@ -10,24 +10,24 @@
           <div class="login__form__input__item no-margin full-span">
             <div class="input-texts">
               <label
-                for="username"
-                :class="emptyFields.includes('username') ? 'red-label' : ''"
-                >Username</label
+                for="email"
+                :class="emptyFields.includes('email') ? 'red-label' : ''"
+                >Email</label
               >
-              <p class="empty-message" v-if="emptyFields.includes('username')">
-                Username is required!
+              <p class="empty-message" v-if="emptyFields.includes('email')">
+                Email is required!
               </p>
             </div>
             <input
-              v-model="user.username"
+              v-model="user.email"
               v-validate="'required'"
               type="text"
-              name="username"
-              id="username"
-              ref="username"
-              :class="emptyFields.includes('username') ? 'empty-border' : ''"
-              @click="wipeError('username')"
-              @change="wipeError('username')"
+              name="email"
+              id="email"
+              ref="email"
+              :class="emptyFields.includes('email') ? 'empty-border' : ''"
+              @click="wipeError('email')"
+              @change="wipeError('email')"
               spellcheck="false"
             />
           </div>
@@ -96,13 +96,16 @@ export default {
     message: ''
     }),
   computed: {
+    currentUser(){
+      return this.$store.state.auth.user;
+    },
     loggedIn() {
       return this.$store.state.auth.status.loggedIn;
     }
   },
   mounted() {
     if (this.loggedIn) {
-      this.$router.push('/');
+      this.$router.push("/");
     }
   },
   methods: {
@@ -116,6 +119,7 @@ export default {
         if (isValid) {
           this.$store.dispatch('auth/login', this.user).then(
             data => {
+              this.$router.push('/');
               this.message = data.message;
               this.successful = true;
             },
@@ -132,7 +136,7 @@ export default {
 
 
       const myRefs = [
-        this.$refs.username,
+        this.$refs.email,
         this.$refs.password
       ];
       myRefs.map((ref) => {
@@ -172,29 +176,6 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   -moz-appearance: textfield;
   margin: 0;
-}
-.back-link {
-  font-size: 1.5rem;
-  line-height: 2.5rem;
-  font-weight: 500;
-  color: #7d7d7d;
-  margin: 1.6rem auto 2.4rem auto;
-  display: block;
-  cursor: pointer;
-  width: 32.7rem;
-  transition: all 0.3s ease;
-  &:hover {
-    color: rgba(216, 125, 74, 1);
-  }
-  @media (min-width: 768px) {
-    width: 68.9rem;
-    margin-top: 3.3rem;
-  }
-  @media (min-width: 1205px) {
-    margin-top: 7.9rem;
-    width: 111rem;
-    padding-left: 1rem;
-  }
 }
 .empty-border {
   border: 0.2rem solid #ce382c !important;

@@ -24,7 +24,7 @@
     <h2 class="category__name">{{ product }}</h2>
     <router-link
       class="category__link"
-      :to="{ name: 'CategoryPage', params: { category: `${product}` } }"
+      :to="{ name: 'Products', params: { category: `${product}` } }"
       @click="scrollToTop"
     >
       Shop
@@ -89,7 +89,7 @@ export default {
   }
 
   & #mugs {
-    top: -4rem;
+    top: -5rem;
   }
 
   &__thumbnail {
@@ -116,6 +116,19 @@ export default {
       letter-spacing: 0.129rem;
     }
   }
+
+  #coffee {
+    padding-bottom: 1.7rem;
+  }
+
+  #brewers {
+    padding-bottom: 3.7rem;
+  }
+
+  #mugs {
+    padding-bottom: 2rem;
+  }
+
 
   &__link {
     margin-top: 1.7rem;

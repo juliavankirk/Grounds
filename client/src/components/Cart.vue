@@ -12,20 +12,20 @@
     <div class="products">
       <div class="products__item" v-for="product in cart" :key="product.id">
         <div class="left">
-          <img :src="editSrc(product)" :alt="product.name" />
+          <img :src="product.productId.img" :alt="product.title" />
           <div class="products__item__info">
             <h4>
-              {{ product.slug.slice(0, product.slug.indexOf("-")) }}
+              {{ product.productId.title }}
             </h4>
-            <p>$ {{ separator(product.price) }}</p>
+            <p>{{ (product.productId.price) }},00 kr.</p>
           </div>
         </div>
         <div class="products__item__quantity">
-          <button class="less" @click="changeQuantity('subtract', product.id)">
+          <button class="less" @click="changeQuantity('subtract', product.productId._id)">
             -
           </button>
-          <p class="value">{{ product.addedQuantity }}</p>
-          <button class="more" @click="changeQuantity('add', product.id)">
+          <p class="value">{{ product.quantity }}</p>
+          <button class="more" @click="changeQuantity('add', product.productId._id)">
             +
           </button>
         </div>
@@ -33,7 +33,7 @@
     </div>
     <div class="cart__total">
       <h4>Total</h4>
-      <p>${{ separator(total) }}</p>
+      <p>{{ this.total }},00 kr.</p>
     </div>
     <router-link
       class="cart__router-link"
@@ -54,7 +54,7 @@ export default {
   props: { show: Boolean, cart: Array },
   methods: {
     editSrc(product) {
-      return require(`../${product.image.mobile.slice(2)}`);
+      return require(`${product.img}`);
     },
     separator(numb) {
       var str = numb.toString().split(".");
@@ -65,15 +65,18 @@ export default {
       const data = {
         productId: id,
         operation: operation,
+        
       };
       this.$emit("change-quantity", data);
+      console.log(data);
+      console.log(operation);
     },
   },
   computed: {
     total() {
       let totalValue = 0;
       this.cart.forEach(
-        (product) => (totalValue += product.price * product.addedQuantity)
+        (product) => (totalValue += product.productId.price * product.quantity)
       );
       return totalValue;
     },

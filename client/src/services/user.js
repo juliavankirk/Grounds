@@ -1,14 +1,15 @@
-import Api from '@/services/Api'
+import { Api } from '@/services/Api'
+import authHeader from './auth.js'
 
 export const userApi = {
   getAllUsers: () => 
-    Api.get('/users/'),
+    Api.get('/users/', { headers: authHeader() }),
   getUser: userId => 
-    Api.get(`/users/find/${userId}`,),
-  updateUser: (userId) => 
-    Api.put(`/users/${userId}`),
+    Api.get(`/users/find/${userId}`, { headers: authHeader() }),
+  updateUser: (userId, data) => 
+    Api.put(`/users/${userId}`, data, { headers: authHeader() }),
   deleteUser: userId => 
-    Api.delete(`/users/${userId}`),
+    Api.delete(`/users/${userId}`, { headers: authHeader() }),
   getUserStats: () => 
-    Api.get('/users/stats')
+    Api.get('/users/stats', { headers: authHeader() })
 }

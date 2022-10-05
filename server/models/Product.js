@@ -7,6 +7,10 @@ const ProductSchema = new mongoose.Schema(
       required: true, 
       unique: true 
     },
+    subtitle: { 
+      type: String, 
+      required: true, 
+    },
     desc: { 
       type: String, 
       required: true, 
@@ -36,4 +40,4 @@ const ProductSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("ProductModel", ProductSchema);
+module.exports = mongoose.model("Product", ProductSchema);
