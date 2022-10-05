@@ -89,7 +89,7 @@ export default {
   }
 
   & #mugs {
-    top: -4rem;
+    top: -5rem;
   }
 
   &__thumbnail {
