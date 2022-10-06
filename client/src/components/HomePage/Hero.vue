@@ -1,6 +1,5 @@
 <template>
   <section class="hero">
-    <p class="hero__product-tag">New product</p>
     <h1 class="hero__product-name">
       Discover the nuances of every note in our coffee.
     </h1>
@@ -47,15 +46,6 @@ export default {
 
   * {
     text-align: center;
-  }
-
-  &__product-tag {
-    text-transform: uppercase;
-    color: #8c8c8c;
-    font-weight: 400;
-    font-size: 1.4rem;
-    line-height: 1.912rem;
-    letter-spacing: 1rem;
   }
 
   &__product-name {
