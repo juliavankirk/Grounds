@@ -4,7 +4,7 @@
       :title="title"
       @toggle-menu-show="$emit('toggle-menu-show', $event)" />
         <b-col class="col-xl-6">
-          <b-card class="my-cards"
+          <b-card class="my-cards border-0"
             v-for="(product, index) in allProducts"
             :key="index"
           >
