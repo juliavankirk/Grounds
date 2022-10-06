@@ -13,7 +13,6 @@
         v-for="(product, index) in allProducts"
         :key="index"
       >
-        <router-link :to="`/item/${product._id}`">
         <b-card-img 
           :src="product.img"
           :alt="product.title"
@@ -26,7 +25,6 @@
         <b-card-text class="price">
           {{product.price}},00 kr
         </b-card-text>
-        </router-link>
       </b-card>
     </b-col>
   </section>

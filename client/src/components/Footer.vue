@@ -8,13 +8,14 @@
           alt="grounds logo"
           class="footer__content__first-line__logo"
         />
-        <ul class="footer__content__first-line__link-list">
+        <section v-if="!currentAdmin || !currentAdmin.isAdmin">
+          <ul class="footer__content__first-line__link-list">
           <li class="footer__content__first-line__link-list__link">
             <router-link @click="scrollToTop" to="/">Home</router-link>
           </li>
           <li class="footer__content__first-line__link-list__link">
             <router-link @click="scrollToTop" to="/products"
-              >Shop</router-link
+              >Products</router-link
             >
           </li>
           <li class="footer__content__first-line__link-list__link">
@@ -23,12 +24,30 @@
             >
           </li>
         </ul>
+        </section>
+        <section v-if="currentAdmin && currentAdmin.isAdmin">
+          <ul class="footer__content__first-line__link-list">
+          <li class="footer__content__first-line__link-list__link">
+            <router-link @click="scrollToTop" to="/">Home</router-link>
+          </li>
+          <li class="footer__content__first-line__link-list__link">
+            <router-link @click="scrollToTop" to="/catalog"
+              >Catalog</router-link
+            >
+          </li>
+          <li class="footer__content__first-line__link-list__link">
+            <router-link @click="scrollToTop" to="/about"
+              >About</router-link
+            >
+          </li>
+        </ul>
+        </section>
+        
       </div>
       <p class="footer__content__text">
-        Coffee roasting is simple. You don't require expensive equipment or need the knowledge to do so. 
-        We provide you all with the finest beans to get started and discover coffee in a new way.
-        From the farmer to the beans, the roasting to the brewing, our coffee will take you on
-        an adventure like never before.
+        Coffee made simple. We provide you all with the finest beans to experience coffee 
+        in a new way. From the farmer to the beans, the roasting to the brewing, our 
+        coffee will take you on an adventure like never before.
       </p>
       <div class="footer__content__copyright-section">
         <p class="footer__content__copyright-section__copyright-text">
@@ -65,6 +84,11 @@
 <script>
 export default {
   name: "Footer",
+  computed: {
+    currentAdmin() {
+      return this.$store.state.auth.user;
+    }
+  },
   methods: {
     scrollToTop() {
       window.scrollTo(0, 0);
