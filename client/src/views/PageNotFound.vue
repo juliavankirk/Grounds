@@ -19,7 +19,7 @@ export default {
   emits: ["toggle-menu-show"],
   data() {
     return {
-      title: "PageNotFound",
+      title: "Page Not Found",
     }
   },
 };

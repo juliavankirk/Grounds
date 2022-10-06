@@ -82,7 +82,8 @@ export default {
       this.$router.push('/login');
     },
     retrieveProducts() {
-      productApi
+      try {
+        productApi
         .getProducts()
         .then(res => {
           this.allProducts = res.data
@@ -91,6 +92,9 @@ export default {
         .catch(err => {
           console.log(err);
         });
+      } catch (error) {
+        console.log(err);
+      }
   },
 
   retrieveCart() {
@@ -214,40 +218,56 @@ export default {
       }
       // store data to cart
       this.storeCart(); 
+      console.log(prodId);
     },
 
     changeQuantity(data) {
       //if product exists within cart
-      const index = this.cart.findIndex((prod) => prod.productId._id === data.productId);
+      const index = this.cart.findIndex((product) => product.productId._id === data.productId);
       //if operation subtracts
       console.log("below is data then index");
       
       if (data.operation === "subtract") {
-        console.log("subtracting");
+        
         // if qty equals 1
         if (this.cart[index].quantity === 1) {
+          if (this.cart[0]) {
+            this.emptyCart();
+          }
           // return cart with only the productID that does not match the current index's productId
           this.cart = this.cart
             .slice()
-            .filter((prod) => prod.productId._id !== data.productId);
+            .filter((product) => product.productId._id !== data.productId);
         } else {
           this.cart[index] = {
             ...this.cart[index],
             quantity: this.cart[index].quantity - 1,
           };
+          this.$forceUpdate();
+          console.log("subtracting");
         }
       } else if (data.operation === "add") {
-        console.log("adding");
+        
         this.cart[index] = {
           ...this.cart[index],
           quantity: this.cart[index].quantity + 1,
         };
+        this.$forceUpdate();
+        console.log("adding");
+        console.log(this.cart[index].quantity);
+        console.log(this.cart)
       }
+        console.log(this.cart[index].quantity);
       this.storeCart();
       //api update cart
       if (this.currentUser) {
         // api update cart
+        try {
           this.updateUserCart();
+        } catch (error) {
+          console.log(error);
+        }
+          
       }
     },
     emptyCart() {
@@ -274,11 +294,13 @@ export default {
     }
     this.retrieveProducts();
     this.retrieveCart();
+    //this.cart = [];
   },
   mounted() {
     this.cart = JSON.parse(localStorage.getItem("cart"));
     this.retrieveProducts();
     this.retrieveCart();
+    //this.cart = [];
   },
 };
 </script>

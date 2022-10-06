@@ -33,7 +33,7 @@
     </div>
     <div class="cart__total">
       <h4>Total</h4>
-      <p>{{ this.total }},00 kr.</p>
+      <p >{{ this.total }},00 kr.</p>
     </div>
     <router-link
       class="cart__router-link"
@@ -52,6 +52,9 @@
 export default {
   name: "Cart",
   props: { show: Boolean, cart: Array },
+  data: () => ({
+    ref: 0,
+  }),
   methods: {
     editSrc(product) {
       return require(`${product.img}`);
@@ -62,8 +65,10 @@ export default {
         operation: operation,
         
       };
+      this.ref++;
       this.$emit("change-quantity", data);
-      console.log(data);
+      this.$forceUpdate();
+      console.log(data.productId);
       console.log(operation);
     },
   },
@@ -73,9 +78,15 @@ export default {
       this.cart.forEach(
         (product) => (totalValue += product.productId.price * product.quantity)
       );
+      this.ref;
+      console.log(totalValue);
       return totalValue;
     },
   },
+  mounted() {
+    this.ref++;
+    this.changeQuantity();
+  }
 };
 </script>
 
