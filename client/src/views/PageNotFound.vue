@@ -12,7 +12,7 @@ import Header from '../components/ProductsPage/Header.vue';
 
 
 export default {
-  name: "PageNotFound",
+  name: "Page Not Found",
   components: {
     Header,
   },
