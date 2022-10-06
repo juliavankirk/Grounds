@@ -53,29 +53,6 @@
         <p class="footer__content__copyright-section__copyright-text">
           Copyright 2022. All Rights Reserved
         </p>
-        <ul class="footer__content__copyright-section__social-media-links">
-          <li
-            class="footer__content__copyright-section__social-media-links__link"
-          >
-            <router-link to="#" aria-label="Go to our Facebook"
-              ><i class="fab fa-facebook fa-2x"></i
-            ></router-link>
-          </li>
-          <li
-            class="footer__content__copyright-section__social-media-links__link"
-          >
-            <router-link to="#" aria-label="Go to our Twitter"
-              ><i class="fab fa-twitter fa-2x"></i
-            ></router-link>
-          </li>
-          <li
-            class="footer__content__copyright-section__social-media-links__link"
-          >
-            <router-link to="#" aria-label="Go to our Instagram"
-              ><i class="fab fa-instagram fa-2x"></i
-            ></router-link>
-          </li>
-        </ul>
       </div>
     </div>
   </footer>

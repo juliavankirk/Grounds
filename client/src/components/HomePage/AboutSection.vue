@@ -6,10 +6,9 @@
         Every cup is an <span>adventure</span> with our coffee grounds
       </h2>
       <p class="about__text__description">
-        Coffee roasting is simple. You don't require expensive equipment or need the knowledge to do so. 
-        We provide you all with the finest beans to get started and discover coffee in a new way.
-        From the farmer to the beans, the roasting to the brewing, our coffee will take you on
-        an adventure like never before.
+        Coffee made simple. We provide you all with the finest beans to experience coffee 
+        in a new way. From the farmer to the beans, the roasting to the brewing, our 
+        coffee will take you on an adventure like never before.
       </p>
     </div>
   </section>
