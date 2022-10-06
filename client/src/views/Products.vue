@@ -8,7 +8,9 @@
             v-for="(product, index) in allProducts"
             :key="index"
           >
-          <router-link :to="`/product/${product._id}`">
+          <router-link 
+            :to="{ name: 'product', params: { category: `${product._id}` } }"
+          >
           <b-card-img 
             :src="product.img"
             :alt="product.title"
@@ -48,8 +50,9 @@ export default {
   
   methods: {
     retrieveProducts() {
+      console.log(this.$route.params.category);
       productApi
-        .getProducts()
+        .getProducts(this.$route.params.category)
         .then(res => {
           this.allProducts = res.data
           console.log(res.data);

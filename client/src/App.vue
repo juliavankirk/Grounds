@@ -29,6 +29,7 @@
     <router-view
       @toggle-menu-show="toggleMenu"
       @add-to-cart="addToCart"
+      @change-quantity="changeQuantity"
       @empty-cart="emptyCart"
       :cart="cart"
       :showConfirmation="showConfirmation"
@@ -56,6 +57,9 @@ export default {
     currentUser() {
       return this.$store.state.auth.user;
     }
+  },
+  watch: {
+    
   },
 
   data() {

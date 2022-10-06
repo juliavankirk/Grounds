@@ -63,7 +63,6 @@
 <script>
 import Header from "../components/ProductPage/Header.vue";
 import { productApi } from "@/services/product.js"
-import data from "../data.json";
 
 export default {
   name: "ProductPage",
@@ -81,7 +80,7 @@ export default {
   methods: {
     retrieveProduct() {
       productApi
-      .getProduct(this.$route.params.id)
+      .getProduct(this.$route.params.category)
       .then(res => {
         this.currentProduct = res.data
         console.log(res.data);
