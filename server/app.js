@@ -42,13 +42,6 @@ app.options('*', cors());
 //registering cors
 app.use(cors());
 
-app.get("/", (req, res) => {
-    res.json({
-        message:
-        "Howdy MEVN dev!"
-    })
-})
-
 // Import routes
 app.use('/api/auth', authRoute);
 app.use('/api/users', userRoute);
